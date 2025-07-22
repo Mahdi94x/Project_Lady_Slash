@@ -26,11 +26,15 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// MovementRate cm/s * DeltaTime (s/frame) => (cm/frame) framerate independent
+	RunningTime += DeltaTime;
+	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant); // period = 2*pi/k. k is TimeConstant
+	AddActorWorldOffset(FVector(0.f, 0.f, DeltaZ));
+
+	/*MovementRate cm/s * DeltaTime (s/frame) => (cm/frame) framerate independent
 	float MovementRate = 50.f;
 	float RotationRate = 45.f;
 	AddActorWorldOffset(FVector(MovementRate*DeltaTime, 0.f, 0.f));
-	AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
+	AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));*/
 
 	FVector StartLocation = GetActorLocation();
 	FVector Forward = GetActorForwardVector();

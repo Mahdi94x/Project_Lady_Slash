@@ -16,4 +16,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+
+	UPROPERTY(VisibleInstanceOnly, Category = "Item Periodic Behavior")
+	double RunningTime = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Item Periodic Behavior")
+	float Amplitude = 0.25f;
+
+	UPROPERTY(EditAnywhere, Category = "Item Periodic Behavior")
+	float TimeConstant = 5.f;
 };
