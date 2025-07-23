@@ -16,14 +16,24 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
+	float Amplitude = 2.5f;
+	
+	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
+	float TimeConstant = 10.f;
+
+	UFUNCTION(BlueprintPure)
+	float TransformedSine();
+
+	UFUNCTION(BlueprintPure)
+	float TransformedCosine();
+
 private:
 
-	UPROPERTY(VisibleInstanceOnly, Category = "Item Periodic Behavior")
+	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	double RunningTime = 0;
 
-	UPROPERTY(EditAnywhere, Category = "Item Periodic Behavior")
-	float Amplitude = 0.25f;
+	
 
-	UPROPERTY(EditAnywhere, Category = "Item Periodic Behavior")
-	float TimeConstant = 5.f;
+	
 };

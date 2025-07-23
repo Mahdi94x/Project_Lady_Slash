@@ -22,13 +22,24 @@ void AItem::BeginPlay()
 	DRAW_VECTOR(StartLocation, EndLocation);*/
 }
 
+float AItem::TransformedSine()
+{
+	return Amplitude * FMath::Sin(RunningTime * TimeConstant);
+}
+
+float AItem::TransformedCosine()
+{
+	return Amplitude * FMath::Cos(RunningTime * TimeConstant);
+}
+
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	RunningTime += DeltaTime;
-	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant); // period = 2*pi/k. k is TimeConstant
-	AddActorWorldOffset(FVector(0.f, 0.f, DeltaZ));
+
+	/*float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant); // period = 2*pi/k. k is TimeConstant
+	AddActorWorldOffset(FVector(0.f, 0.f, DeltaZ));*/
 
 	/*MovementRate cm/s * DeltaTime (s/frame) => (cm/frame) framerate independent
 	float MovementRate = 50.f;
