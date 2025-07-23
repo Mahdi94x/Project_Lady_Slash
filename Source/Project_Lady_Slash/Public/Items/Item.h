@@ -33,6 +33,8 @@ private:
 	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	double RunningTime = 0;
 
+	UPROPERTY(VisibleAnywhere) // Details and Component Panels
+	UStaticMeshComponent* ItemMesh;
 	
 
 	
