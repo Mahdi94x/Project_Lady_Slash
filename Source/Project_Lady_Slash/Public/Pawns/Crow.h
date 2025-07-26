@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "Crow.generated.h"
 
 UCLASS()
@@ -18,6 +19,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputMappingContext* CrowMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* CrowMoveAction;
+
+	void Move(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere)

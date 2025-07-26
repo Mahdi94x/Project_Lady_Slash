@@ -3,12 +3,16 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include"Components/InputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 
 
 ACrow::ACrow()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CrowCapsuleComponent"));
 	Capsule->SetCapsuleHalfHeight(22.f);
@@ -24,14 +28,34 @@ ACrow::ACrow()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CrowCamera"));
 	Camera->SetupAttachment(SpringArm);
-	
 
 }
 
 void ACrow::BeginPlay()
 {
 	Super::BeginPlay();
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(CrowMappingContext, 0);
+		}
+	}
 	
+}
+
+void ACrow::Move(const FInputActionValue& Value)
+{
+	const float DirectionValue = Value.Get<float>();
+
+	if (Controller && (DirectionValue != 0.f))
+	{
+		FVector Forward = GetActorForwardVector();
+		AddMovementInput(Forward, DirectionValue);
+	}
 }
 
 void ACrow::Tick(float DeltaTime)
@@ -43,6 +67,12 @@ void ACrow::Tick(float DeltaTime)
 void ACrow::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+	if (EnhancedInputComponent)
+	{
+		EnhancedInputComponent->BindAction(CrowMoveAction, ETriggerEvent::Triggered, this, &ACrow::Move);
+	}
 
 }
 
