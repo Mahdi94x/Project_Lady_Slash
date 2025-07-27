@@ -29,6 +29,8 @@ ACrow::ACrow()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CrowCamera"));
 	Camera->SetupAttachment(SpringArm);
 
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationYaw = true;
 }
 
 void ACrow::BeginPlay()
@@ -44,7 +46,6 @@ void ACrow::BeginPlay()
 			Subsystem->AddMappingContext(CrowMappingContext, 0);
 		}
 	}
-	
 }
 
 void ACrow::Move(const FInputActionValue& Value)
@@ -58,10 +59,19 @@ void ACrow::Move(const FInputActionValue& Value)
 	}
 }
 
+void ACrow::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookAxisValue = Value.Get<FVector2D>();
+	if (Controller)
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
+	}
+}
+
 void ACrow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ACrow::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -72,7 +82,7 @@ void ACrow::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (EnhancedInputComponent)
 	{
 		EnhancedInputComponent->BindAction(CrowMoveAction, ETriggerEvent::Triggered, this, &ACrow::Move);
+		EnhancedInputComponent->BindAction(CrowLookAction, ETriggerEvent::Triggered, this, &ACrow::Look);
 	}
-
 }
 
