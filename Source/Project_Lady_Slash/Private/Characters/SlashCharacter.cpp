@@ -4,7 +4,8 @@
 #include "EnhancedInputComponent.h" 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GroomComponent.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -12,15 +13,24 @@ ASlashCharacter::ASlashCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 
 	EchoSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("EchoCameraBoom"));
 	EchoSpringArm->SetupAttachment(GetRootComponent());
 	EchoSpringArm->TargetArmLength = 300.f;
 	EchoSpringArm->bUsePawnControlRotation = true;
 
-
 	EchoCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("EchoCamera"));
 	EchoCamera->SetupAttachment(EchoSpringArm);
+
+	EchoHair = CreateDefaultSubobject<UGroomComponent>(TEXT("EchoHair"));
+	EchoHair->SetupAttachment(GetMesh());
+	EchoHair->AttachmentName = FString("head");
+
+	EchoEyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("EchoEyebrows"));
+	EchoEyebrows->SetupAttachment(GetMesh());
+	EchoEyebrows->AttachmentName = FString("head");
 
 }
 
@@ -42,16 +52,20 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::EchoMove(const FInputActionValue& Value)
 {
-	const FVector2D MovementVector = Value.Get<FVector2D>();
+	const FVector2D MovementVector = Value.Get<FVector2D>(); /*2D Vector x and y*/
 
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.f,Rotation.Yaw, 0.f);
+	const FRotator Rotation = Controller->GetControlRotation(); /*Controller Rotation*/
+	const FRotator YawRotation(0.f,Rotation.Yaw, 0.f); 
+	/*Rotation matrix based on the yaw of the controller rotation prependiculat to x ,y,
+	ensure movement stays parallel to the ground*/
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	AddMovementInput(ForwardDirection, MovementVector.Y);
+	// Find out which way is forward
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); /*forward direction in 3D cares about x*/
+	AddMovementInput(ForwardDirection, MovementVector.Y); /*in 2D vector forward and backward relate to y */
 
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	AddMovementInput(RightDirection, MovementVector.X);
+	// Find out which way is right
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y); /*right direction in 3D cares about y*/
+	AddMovementInput(RightDirection, MovementVector.X); /*in 2D vector right and left relate to the x*/
 	
 }
 

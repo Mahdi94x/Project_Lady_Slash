@@ -59,4 +59,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* EchoCamera;
 
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	class UGroomComponent* EchoHair;
+
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	UGroomComponent* EchoEyebrows;
+
+
 };
