@@ -28,6 +28,12 @@ protected:
 	UFUNCTION(BlueprintPure)
 	float TransformedCosine();
 
+	UFUNCTION()
+	void OnSphereBeginOverlap (UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 private:
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -35,6 +41,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere) // Details and Component Panels
 	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	class USphereComponent* OverlapSphere;
 	
 
 	
