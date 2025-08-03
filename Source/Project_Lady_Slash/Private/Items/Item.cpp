@@ -54,7 +54,6 @@ void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	{
 		GEngine->AddOnScreenDebugMessage(2, 30.f, FColor::Cyan, Message);
 	}
-	this->SetLifeSpan(3.0f);
 }
 
 void AItem::Tick(float DeltaTime)
@@ -62,6 +61,9 @@ void AItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	RunningTime += DeltaTime;
+
+	AddActorWorldOffset(FVector(0.f,0.f, TransformedSine()));
+	AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
 
 }
 
