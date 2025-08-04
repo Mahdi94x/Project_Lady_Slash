@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterTypes.h"
 #include "SlashAnimInstance.generated.h"
 
 UCLASS()
@@ -26,5 +27,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Animation Variables")
 	bool IsEchoFalling;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Animation Variables")
+	ECharacterState EchoCurrentStateAnim;
 	
 };

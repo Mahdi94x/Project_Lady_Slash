@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
 UCLASS()
@@ -52,6 +53,8 @@ protected:
 	void Dodge();
 
 private:
+	ECharacterState EchoCurrentState = ECharacterState::ECS_UnEquipped;
+
 	/*Components*/
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* EchoSpringArm;
@@ -73,5 +76,6 @@ private:
 
 public: /*Setters and Getters*/
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+	FORCEINLINE ECharacterState GetEchoCharacterState() const { return this->EchoCurrentState; }
 
 };
