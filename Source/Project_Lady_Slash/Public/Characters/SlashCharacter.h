@@ -52,7 +52,7 @@ protected:
 	void Dodge();
 
 private:
-
+	/*Components*/
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* EchoSpringArm;
 
@@ -64,6 +64,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* EchoEyebrows;
+	/*Components*/
 
+	/*Pointers*/
+	UPROPERTY(VisibleInstanceOnly)
+	class AItem* OverlappingItem;
+	/*Pointers*/
+
+public: /*Setters and Getters*/
+	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 
 };

@@ -13,6 +13,8 @@ class PROJECT_LADY_SLASH_API AWeapon : public AItem
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	void WeaponBeingEquip(USceneComponent* InParent, FName InSocketName);
+
 protected:
 
 	virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;

@@ -1,6 +1,7 @@
 #include "Items/Item.h"
 #include "Project_Lady_Slash/DebugMacros.h"
 #include "Components/SphereComponent.h"
+#include "Characters/SlashCharacter.h"
 
 
 AItem::AItem()
@@ -38,21 +39,19 @@ float AItem::TransformedCosine()
 
 void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Testing
-	const FString Message = FString(OverlappedComponent->GetName() + TEXT(" started Overlap with: ") + OtherActor->GetName());
-	if (GEngine)
+	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
+	if (SlashCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, Message);
+		SlashCharacter->SetOverlappingItem(this);
 	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//Testing
-	const FString Message = FString(OverlappedComponent->GetName() + TEXT(" ended Overlap with: ") + OtherActor->GetName());
-	if (GEngine)
+	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
+	if (SlashCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(2, 30.f, FColor::Cyan, Message);
+		SlashCharacter->SetOverlappingItem(nullptr);
 	}
 }
 

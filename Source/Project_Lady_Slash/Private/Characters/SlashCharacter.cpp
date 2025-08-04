@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
+#include "Items/Weapon/Weapon.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -79,7 +80,14 @@ void ASlashCharacter::EchoLook(const FInputActionValue& Value)
 
 void ASlashCharacter::EKeyPressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Echo::EKeyPressed"));
+	if (OverlappingItem)
+	{
+		AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+		if (OverlappingWeapon)
+		{
+			OverlappingWeapon->WeaponBeingEquip(this->GetMesh(),FName("RightHandSocket"));
+		}
+	}
 }
 
 void ASlashCharacter::Attack()
