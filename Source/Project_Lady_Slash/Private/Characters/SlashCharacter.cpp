@@ -86,14 +86,55 @@ void ASlashCharacter::EKeyPressed()
 		if (OverlappingWeapon)
 		{
 			OverlappingWeapon->WeaponBeingEquip(this->GetMesh(),FName("RightHandSocket"));
-			EchoCurrentState = ECharacterState::ECS_EquippedOneHandedWeapon;
+			EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
 		}
 	}
 }
 
+void ASlashCharacter::PlayAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		const int32 SectionSelection = FMath::RandRange(0, 1);
+		FName SectionName = NAME_None;
+
+		switch (SectionSelection)
+		{
+		case 0:
+			SectionName = FName("Attack0");
+			break;
+		case 1:
+			SectionName = FName("Attack1");
+			break;
+
+		default:
+			break;
+		}
+
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+bool ASlashCharacter::CanEchoAttack()
+{
+	return EchoActionState == EActionState::EAS_Unoccupied && 
+		EchoCurrentState != ECharacterState::ECS_UnEquipped;
+}
+
 void ASlashCharacter::Attack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Echo::Attack"));
+	if (CanEchoAttack())
+	{
+		PlayAttackMontage();
+		EchoActionState = EActionState::EAS_Attacking;
+	}
+}
+
+void ASlashCharacter::AttackEnd()
+{
+	EchoActionState = EActionState::EAS_Unoccupied;
 }
 
 void ASlashCharacter::Dodge()

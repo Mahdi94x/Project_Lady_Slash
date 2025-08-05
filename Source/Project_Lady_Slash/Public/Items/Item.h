@@ -19,6 +19,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) // Details and Component Panels
 	UStaticMeshComponent* ItemMesh;
 
+	UPROPERTY(VisibleAnywhere)
+	class USphereComponent* OverlapSphere;
+
 	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
 	float Amplitude = 2.5f;
 	
@@ -45,7 +48,5 @@ private:
 	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	double RunningTime = 0;
 
-	UPROPERTY(VisibleAnywhere)
-	class USphereComponent* OverlapSphere;
 
 };

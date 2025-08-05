@@ -35,25 +35,42 @@ protected:
 	UInputAction* EchoLookAction;
 
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputAction* EchoJumpAction;
+	UInputAction* EchoJumpAction;
 
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputAction* EchoEKeyAction;
+	UInputAction* EchoEKeyAction;
 
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputAction* EchoAttackAction;
+	UInputAction* EchoAttackAction;
 
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputAction* EchoDodgeAction;
+	UInputAction* EchoDodgeAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
+	UAnimMontage* AttackMontage;
+
+	/*Callbacks for Input*/
 	void EchoMove(const FInputActionValue& Value);
 	void EchoLook(const FInputActionValue& Value);
 	void EKeyPressed();
 	void Attack();
 	void Dodge();
 
+	/*Play Montage Sections*/
+	void PlayAttackMontage();
+
+	bool CanEchoAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
+
 private:
+
 	ECharacterState EchoCurrentState = ECharacterState::ECS_UnEquipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState EchoActionState = EActionState::EAS_Unoccupied;
 
 	/*Components*/
 	UPROPERTY(VisibleAnywhere)
