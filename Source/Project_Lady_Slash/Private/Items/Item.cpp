@@ -61,8 +61,10 @@ void AItem::Tick(float DeltaTime)
 
 	RunningTime += DeltaTime;
 
-	AddActorWorldOffset(FVector(0.f, 0.f, TransformedSine()));
-	AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
-
+	if (ItemCurrentState == EItemState::EIS_Hovering)
+	{
+		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSine()));
+		AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
+	}
 }
 

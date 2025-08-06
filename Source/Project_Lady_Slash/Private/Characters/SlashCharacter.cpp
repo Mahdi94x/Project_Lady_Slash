@@ -54,11 +54,12 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::EchoMove(const FInputActionValue& Value)
 {
+	if (EchoActionState == EActionState::EAS_Attacking) {return;} /*or != EActionState::EAS_Unoccupied*/
 	const FVector2D MovementVector = Value.Get<FVector2D>(); /*2D Vector x and y*/
 
 	const FRotator Rotation = Controller->GetControlRotation(); /*Controller Rotation*/
 	const FRotator YawRotation(0.f,Rotation.Yaw, 0.f); 
-	/*Rotation matrix based on the yaw of the controller rotation prependiculat to x ,y,
+	/*Rotation matrix based on the yaw of the controller rotation perpendicular to x ,y,
 	ensure movement stays parallel to the ground*/
 
 	// Find out which way is forward

@@ -4,6 +4,13 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+/*Raw C++ Enum*/
+enum class EItemState : uint8
+{
+	EIS_Hovering UMETA(DisplayName = "Hovering"),
+	EIS_Equipped UMETA(DisplayName = "Equipped")
+};
+
 UCLASS()
 class PROJECT_LADY_SLASH_API AItem : public AActor
 {
@@ -15,6 +22,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	EItemState ItemCurrentState = EItemState::EIS_Hovering;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) // Details and Component Panels
 	UStaticMeshComponent* ItemMesh;

@@ -68,8 +68,6 @@ protected:
 private:
 
 	ECharacterState EchoCurrentState = ECharacterState::ECS_UnEquipped;
-
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState EchoActionState = EActionState::EAS_Unoccupied;
 
 	/*Components*/

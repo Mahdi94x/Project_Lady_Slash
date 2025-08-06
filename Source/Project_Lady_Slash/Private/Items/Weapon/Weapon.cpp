@@ -14,13 +14,13 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 void AWeapon::Tick(float DeltaTime)
 {
-
+	Super::Tick(DeltaTime);
 }
 
 void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName)
 {
 	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
 	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
+	this->ItemCurrentState = EItemState::EIS_Equipped;
 	//OverlapSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
 }
