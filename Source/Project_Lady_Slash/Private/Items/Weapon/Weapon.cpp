@@ -19,8 +19,12 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName)
 {
+	AttachWeaponMeshToSocket(InParent, InSocketName);
+	this->ItemCurrentState = EItemState::EIS_Equipped;
+}
+
+void AWeapon::AttachWeaponMeshToSocket(USceneComponent* InParent, const FName& InSocketName)
+{
 	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
 	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
-	this->ItemCurrentState = EItemState::EIS_Equipped;
-	//OverlapSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

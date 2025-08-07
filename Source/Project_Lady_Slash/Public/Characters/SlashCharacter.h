@@ -25,6 +25,7 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	/*InputActions*/
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
 	class UInputMappingContext* EchoMappingContext;
 
@@ -45,9 +46,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
 	UInputAction* EchoDodgeAction;
+	/*InputActions*/
 
+	/*Montages Variables*/
 	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
+	UAnimMontage* EquipMontage;
+	/*Montages Variables*/
 
 	/*Callbacks for Input*/
 	void EchoMove(const FInputActionValue& Value);
@@ -61,14 +68,31 @@ protected:
 
 	bool CanEchoAttack();
 
+	bool CanEchoUnEquipWeapon();
+
+	bool CanEchoEquipWeapon();
+
+	void PlayEquipMontage(FName SectionName);
+
+	/*Anim Notifies*/
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UFUNCTION(BlueprintCallable)
+	void AddToSpineSocket();
+
+	UFUNCTION(BlueprintCallable)
+	void AddToHandSocket();
+
+	UFUNCTION(BlueprintCallable)
+	void EquippingEnd();
+	/*Anim Notifies*/
 
 private:
-
+	/*States*/
 	ECharacterState EchoCurrentState = ECharacterState::ECS_UnEquipped;
 	EActionState EchoActionState = EActionState::EAS_Unoccupied;
+	/*States*/
 
 	/*Components*/
 	UPROPERTY(VisibleAnywhere)
@@ -87,10 +111,14 @@ private:
 	/*Pointers*/
 	UPROPERTY(VisibleInstanceOnly)
 	class AItem* OverlappingItem;
+
+	UPROPERTY(VisibleAnyWhere, Category = Weapon)
+	class AWeapon* EquippedWeapon;
 	/*Pointers*/
 
-public: /*Setters and Getters*/
+public: 
+	/*Setters and Getters*/
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetEchoCharacterState() const { return this->EchoCurrentState; }
-
+	/*Setters and Getters*/
 };
