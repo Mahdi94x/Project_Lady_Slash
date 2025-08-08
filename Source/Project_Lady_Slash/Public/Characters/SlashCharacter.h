@@ -86,6 +86,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void EquippingEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponBoxCollision(ECollisionEnabled::Type CollisionEnabled);
+
 	/*Anim Notifies*/
 
 private:

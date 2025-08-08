@@ -7,6 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
 #include "Items/Weapon/Weapon.h"
+#include "Components/BoxComponent.h"
+
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
@@ -183,6 +185,14 @@ void ASlashCharacter::AddToHandSocket()
 void ASlashCharacter::EquippingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::SetWeaponBoxCollision(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+	}
 }
 
 /*Attacking*/
