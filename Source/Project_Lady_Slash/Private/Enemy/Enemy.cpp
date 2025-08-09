@@ -1,5 +1,6 @@
 #include "Enemy/Enemy.h"
 #include "Components/CapsuleComponent.h"
+#include"Project_Lady_Slash/DebugMacros.h"
 
 AEnemy::AEnemy()
 {
@@ -27,5 +28,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+	DRAW_SPHERE_Color(ImpactPoint, FColor::Orange);
 }
 

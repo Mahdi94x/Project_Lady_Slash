@@ -5,7 +5,7 @@
 // BeginPlay() => bpresistentline=true
 #define DRAW_SPHERE(StartLocation) if(GetWorld()) DrawDebugSphere(GetWorld(), StartLocation, 25.f, 24, FColor::Red, true, -1.f, 1.f);
 
-#define DRAW_SPHERE_Color(StartLocation,Color) if (GetWorld()) DrawDebugSphere(GetWorld(),StartLocation,25.f,24,Color,false,5.f);
+#define DRAW_SPHERE_Color(StartLocation,Color) if (GetWorld()) DrawDebugSphere(GetWorld(),StartLocation,5.f,24,Color,false,5.f);
 
 #define Draw_LINE(StartLocation,EndLocation) if(GetWorld()) DrawDebugLine(GetWorld(),StartLocation, EndLocation, FColor::Blue, true, -1.f, 0, 1.f);
 

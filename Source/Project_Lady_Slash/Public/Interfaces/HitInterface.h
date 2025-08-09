@@ -17,5 +17,5 @@ class PROJECT_LADY_SLASH_API IHitInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void GetHit() = 0;
+	virtual void GetHit(const FVector& ImpactPoint) = 0;
 };
