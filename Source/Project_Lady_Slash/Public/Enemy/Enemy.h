@@ -24,4 +24,12 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	/*Montages Variables*/
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Montages")
+	UAnimMontage* HitReactMontage;
+	/*Montages Variables*/
+
+	/*Play Montage Sections*/
+	void PlayHitReactMontage(const FName& SectionName);
+	/*Play Montage Sections*/
 };

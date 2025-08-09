@@ -156,7 +156,7 @@ bool ASlashCharacter::CanEchoEquipWeapon()
 		EquippedWeapon;
 }
 
-void ASlashCharacter::PlayEquipMontage(FName SectionName)
+void ASlashCharacter::PlayEquipMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && EquipMontage)

@@ -62,6 +62,7 @@ protected:
 	void EKeyPressed();
 	void Attack();
 	void Dodge();
+	/*Callbacks for Input*/
 
 	/*Play Montage Sections*/
 	void PlayAttackMontage();
@@ -72,7 +73,8 @@ protected:
 
 	bool CanEchoEquipWeapon();
 
-	void PlayEquipMontage(FName SectionName);
+	void PlayEquipMontage(const FName& SectionName);
+	/*Play Montage Sections*/
 
 	/*Anim Notifies*/
 	UFUNCTION(BlueprintCallable)
