@@ -20,6 +20,8 @@ public:
 
 	void AttachWeaponMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
+	TArray<AActor*> IgnoreActorsPerSwing; /*One Hit Per Swing*/
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -43,6 +45,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+
+	
 
 public:
 	/*Setters and Getters*/

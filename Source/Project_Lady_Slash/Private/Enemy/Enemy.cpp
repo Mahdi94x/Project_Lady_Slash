@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Components/CapsuleComponent.h"
-#include"Project_Lady_Slash/DebugMacros.h"
+#include "Project_Lady_Slash/DebugMacros.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AEnemy::AEnemy()
 {
@@ -32,8 +33,87 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
+	DirectionalHitReact(ImpactPoint);
+}
+
+void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
+{
+	/*Calculating the angle for enemy direction hit react*/
+	const FVector Forward = this->GetActorForwardVector(); // magnitude = 1, normalized
+	// Lower Impact Point from BoxHit() to the enemy's actor location Z
+	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal(); //magnitude = 1, normalizd
+
+	// Forward (DOT) ToHit = |Forward||ToHit|Cos(theta)
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+
+	// Take the inverse cosine to get the angle
+	double Theta = FMath::Acos(CosTheta);
+
+	// convert from radians to degree
+	Theta = FMath::RadiansToDegrees(Theta);
+
+	// if CrossProduct points down, Theata should be negative
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1;
+	}
+
+	FName SectionName("FromBack");
+
+	if (Theta >= -45.f && Theta < 45.f)
+	{
+		SectionName = FName("FromFront");
+	}
+	else if (Theta >= -135.f && Theta < -45.f)
+	{
+		SectionName = FName("FromLeft");
+	}
+	else if (Theta >= 45.f && Theta < 135.f)
+	{
+		SectionName = FName("FromRight");
+	}
+
+	PlayHitReactMontage(SectionName);
+
+	/*Debugging*/
+
 	DRAW_SPHERE_Color(ImpactPoint, FColor::Orange);
-	PlayHitReactMontage(FName("FromLeft"));
+
+	// Message on the viewport
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Theta));
+	}
+
+	// Drawing Forward Vector 
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + Forward * 60,
+		5.f,
+		FColor::Red,
+		5.f);
+
+	// Drawing ToHit Vector
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + ToHit * 60,
+		5.f,
+		FColor::Green,
+		5.f);
+
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + CrossProduct * 100,
+		5.f,
+		FColor::Blue,
+		5.f);
+	/*Debugging*/
 }
 
 void AEnemy::PlayHitReactMontage(const FName& SectionName)

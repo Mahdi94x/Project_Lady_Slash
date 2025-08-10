@@ -192,6 +192,7 @@ void ASlashCharacter::SetWeaponBoxCollision(ECollisionEnabled::Type CollisionEna
 	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
 	{
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->IgnoreActorsPerSwing.Empty(); /*One Hit Per Swing*/
 	}
 }
 
