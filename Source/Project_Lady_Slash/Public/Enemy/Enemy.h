@@ -26,6 +26,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+private:
+
 	/*Montages Variables*/
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Montages")
 	UAnimMontage* HitReactMontage;
@@ -34,4 +36,10 @@ protected:
 	/*Play Montage Sections*/
 	void PlayHitReactMontage(const FName& SectionName);
 	/*Play Montage Sections*/
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Sounds")
+	USoundBase* HitSounds;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy VFx")
+	UParticleSystem* HitParticle;
 };

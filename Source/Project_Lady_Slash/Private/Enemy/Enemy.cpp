@@ -2,6 +2,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Project_Lady_Slash/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemy::AEnemy()
 {
@@ -34,6 +35,24 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DirectionalHitReact(ImpactPoint);
+
+	if (HitSounds)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			HitSounds,
+			ImpactPoint
+		);
+	}
+	UWorld* World = GetWorld();
+	if (World && HitParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			World,
+			HitParticle,
+			ImpactPoint
+		);
+	}
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
@@ -78,7 +97,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 
 	PlayHitReactMontage(SectionName);
 
-	/*Debugging*/
+	/*Debugging
 
 	DRAW_SPHERE_Color(ImpactPoint, FColor::Orange);
 
@@ -113,7 +132,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 		5.f,
 		FColor::Blue,
 		5.f);
-	/*Debugging*/
+	Debugging*/
 }
 
 void AEnemy::PlayHitReactMontage(const FName& SectionName)
