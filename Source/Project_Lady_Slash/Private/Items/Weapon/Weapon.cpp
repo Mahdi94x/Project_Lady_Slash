@@ -73,6 +73,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 			HitInterface->GetHit(BoxHit.ImpactPoint);
 		}
 		IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
+		CreateField(BoxHit.ImpactPoint);
 	}
 }
 
