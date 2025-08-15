@@ -2,6 +2,7 @@
 #include "Project_Lady_Slash/DebugMacros.h"
 #include "Components/SphereComponent.h"
 #include "Characters/SlashCharacter.h"
+#include "NiagaraComponent.h"
 
 
 AItem::AItem()
@@ -16,6 +17,8 @@ AItem::AItem()
 	OverlapSphere->SetSphereRadius(300.f);
 	OverlapSphere->bHiddenInGame = false;
 
+	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemNiagaraComponent"));
+	EmbersEffect->SetupAttachment(GetRootComponent());
 }
 
 void AItem::BeginPlay()
