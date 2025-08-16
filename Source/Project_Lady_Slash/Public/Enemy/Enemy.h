@@ -42,4 +42,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Enemy VFx")
 	UParticleSystem* HitParticle;
+
+	UPROPERTY(VisibleAnywhere)
+	class UAttributeComponent* EnemyAttributes;
+
+	UPROPERTY(VisibleAnywhere)
+	class UHealthBarComponent* EnemyHealthBar;
 };
