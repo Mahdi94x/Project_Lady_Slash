@@ -16,7 +16,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void WeaponBeingEquip(USceneComponent* InParent, FName InSocketName);
+	void WeaponBeingEquip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 
 	void AttachWeaponMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
@@ -37,6 +37,7 @@ protected:
 	void CreateField(const FVector& FieldLocation);
 
 private:
+
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	USoundBase* EquipSound;
 
@@ -49,7 +50,8 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
 
-	
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	float WeaponDamage = 20.f;
 
 public:
 	/*Setters and Getters*/

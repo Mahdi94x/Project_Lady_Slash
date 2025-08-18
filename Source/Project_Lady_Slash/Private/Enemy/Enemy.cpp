@@ -24,12 +24,10 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
 	if (EnemyHealthBar)
 	{
-		EnemyHealthBar->SetHealthBarPercent(0.75f);
+		EnemyHealthBar->SetHealthBarPercent(1.f);
 	}
-	
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -145,6 +143,20 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 		FColor::Blue,
 		5.f);
 	Debugging*/
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (EnemyAttributes)
+	{
+		EnemyAttributes->UpdateCurrentHealth(DamageAmount);
+
+		if (EnemyHealthBar)
+		{
+			EnemyHealthBar->SetHealthBarPercent(EnemyAttributes->GetCurrentHealthPercent());
+		}
+	}
+	return DamageAmount;
 }
 
 void AEnemy::PlayHitReactMontage(const FName& SectionName)

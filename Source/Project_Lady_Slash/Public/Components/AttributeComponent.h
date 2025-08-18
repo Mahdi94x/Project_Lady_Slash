@@ -22,10 +22,15 @@ protected:
 
 private:
 
-	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float CurrentHealth;
 
-	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float MaxHealth;
+
+public: /*Setters - Getters - Updater*/
+
+	FORCEINLINE void UpdateCurrentHealth(float Damage);
+	FORCEINLINE float GetCurrentHealthPercent();
 	
 };

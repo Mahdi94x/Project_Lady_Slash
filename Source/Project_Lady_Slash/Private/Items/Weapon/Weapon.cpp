@@ -75,6 +75,14 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		}
 		IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
 		CreateField(BoxHit.ImpactPoint);
+
+		UGameplayStatics::ApplyDamage(
+			BoxHit.GetActor(),
+			this->WeaponDamage,
+			this->GetInstigator()->GetController(), 
+			this,
+			UDamageType::StaticClass()
+		);
 	}
 }
 
@@ -83,8 +91,10 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName)
+void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
+	SetOwner(NewOwner);
+	SetInstigator(NewInstigator);
 	AttachWeaponMeshToSocket(InParent, InSocketName);
 	this->ItemCurrentState = EItemState::EIS_Equipped;
 	if (EquipSound)
