@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypesEnums.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -28,15 +29,25 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	void Die();
+
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose EnemyDeathPose = EDeathPose::EDP_Alive;
+
 private:
 
 	/*Montages Variables*/
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Montages")
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Montages")
+	UAnimMontage* DeathMontage;
 	/*Montages Variables*/
 
 	/*Play Montage Sections*/
 	void PlayHitReactMontage(const FName& SectionName);
+
+	void PlayDeathMontage();
 	/*Play Montage Sections*/
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Sounds")
@@ -50,4 +61,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UHealthBarComponent* EnemyHealthBar;
+
+	UPROPERTY()
+	AActor* CombatTarget;
+
+	UPROPERTY(EditAnywhere)
+	double CombatRaduis = 500.f;
+	
 };

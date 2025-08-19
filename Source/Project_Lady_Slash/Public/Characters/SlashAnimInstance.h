@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "CharacterTypes.h"
+#include "CharacterTypesEnums.h"
 #include "SlashAnimInstance.generated.h"
 
 UCLASS()

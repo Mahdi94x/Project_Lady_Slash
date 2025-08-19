@@ -32,5 +32,5 @@ public: /*Setters - Getters - Updater*/
 
 	FORCEINLINE void UpdateCurrentHealth(float Damage);
 	FORCEINLINE float GetCurrentHealthPercent();
-	
+	bool IsCharacterAlive();
 };

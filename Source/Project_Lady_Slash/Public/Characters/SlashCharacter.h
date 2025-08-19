@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "CharacterTypes.h"
+#include "CharacterTypesEnums.h"
 #include "SlashCharacter.generated.h"
 
 UCLASS()

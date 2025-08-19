@@ -68,21 +68,23 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 	if (BoxHit.GetActor())
 	{
+		UGameplayStatics::ApplyDamage(
+			BoxHit.GetActor(),
+			this->WeaponDamage,
+			this->GetInstigator()->GetController(),
+			this,
+			UDamageType::StaticClass()
+		);
+
 		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
 		if (HitInterface)
 		{
 			HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint);
 		}
-		IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
-		CreateField(BoxHit.ImpactPoint);
 
-		UGameplayStatics::ApplyDamage(
-			BoxHit.GetActor(),
-			this->WeaponDamage,
-			this->GetInstigator()->GetController(), 
-			this,
-			UDamageType::StaticClass()
-		);
+		IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
+
+		CreateField(BoxHit.ImpactPoint);
 	}
 }
 
