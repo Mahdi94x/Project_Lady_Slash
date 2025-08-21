@@ -6,6 +6,9 @@
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "AIController.h"
+#include "NavigationPath.h"
+#include "Navigation/PathFollowingComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -31,25 +34,43 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
 	if (EnemyHealthBar)
 	{
 		EnemyHealthBar->SetHealthBarPercent(0.4f);
 		EnemyHealthBar->SetVisibility(false);
 	}
+
+	EnemyAIController = Cast<AAIController>(GetController());
+	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 3.f);
+
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CombatTarget)
+	CheckCombatTarget();
+	CheckPatrolTarget();
+	
+}
+
+void AEnemy::CheckPatrolTarget()
+{
+	if (InTargetRange(CurrentPatrolTarget, PatrolRaduis))
 	{
-		const double DistanceToTarget = (CombatTarget->GetActorLocation() - this->GetActorLocation()).Size();
-		if (DistanceToTarget > CombatRaduis /*Lose Interest*/)
-		{
-			CombatTarget = nullptr;
-			if (EnemyHealthBar) { EnemyHealthBar->SetVisibility(false); }
-		}
+		CurrentPatrolTarget = SelectPatrolTarget();
+		const float RandomWaitTime = FMath::RandRange(WaitTimeMin, WaitTimeMax);
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, RandomWaitTime);
+	}
+}
+
+void AEnemy::CheckCombatTarget()
+{
+	if (!InTargetRange(CombatTarget, CombatRaduis))
+	{
+		CombatTarget = nullptr;
+		if (EnemyHealthBar) { EnemyHealthBar->SetVisibility(false); }
 	}
 }
 
@@ -187,7 +208,7 @@ void AEnemy::Die()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	this->SetLifeSpan(8.f);
+	this->SetLifeSpan(5.f);
 
 }
 
@@ -200,7 +221,7 @@ void AEnemy::PlayDeathMontage()
 
 		const int32 SectionSelection = FMath::RandRange(0, 5);
 		FName SectionName = NAME_None;
-		
+
 		switch (SectionSelection)
 		{
 		case 0:
@@ -234,10 +255,57 @@ void AEnemy::PlayDeathMontage()
 	}
 }
 
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+bool AEnemy::InTargetRange(AActor* Target, double AcceptanceRaduis)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	if (Target == nullptr) return false;
+	const double DistanceToTarget = (Target->GetActorLocation() - this->GetActorLocation()).Size();
+	DRAW_SPHERE_SingleFrame(this->GetActorLocation());
+	DRAW_SPHERE_SingleFrame(Target->GetActorLocation());
+	return DistanceToTarget <= AcceptanceRaduis; /*return true if target is within range*/
+}
 
+AActor* AEnemy::SelectPatrolTarget()
+{
+	TArray<AActor*> ValidPatrolTargets;
+	for (auto Target : PatrolTargets)
+	{
+		if (Target != CurrentPatrolTarget)
+		{
+			ValidPatrolTargets.AddUnique(Target);
+		}
+	}
+	const int32 NumPatrolTargets = ValidPatrolTargets.Num();
+	if (NumPatrolTargets > 0)
+	{
+		const int32 TargetSelection = FMath::RandRange(0, ValidPatrolTargets.Num() - 1);
+		return ValidPatrolTargets[TargetSelection];
+	}
+	return nullptr;
+}
+
+void AEnemy::MoveToTarget(AActor* Target)
+{
+	if (EnemyAIController == nullptr || Target == nullptr) return;
+	
+	FAIMoveRequest MoveRequest;
+	MoveRequest.SetGoalActor(Target);
+	MoveRequest.SetAcceptanceRadius(15.f);
+	FNavPathSharedPtr NavPath;
+
+	EnemyAIController->MoveTo(MoveRequest, &NavPath);
+
+	TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+	for (auto Point : PathPoints)
+	{
+		const FVector& Location = Point.Location;
+		DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
+	}
+	
+}
+
+void AEnemy::PatrolTimerFinished()
+{
+	MoveToTarget(CurrentPatrolTarget);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -255,4 +323,10 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	CombatTarget = EventInstigator->GetPawn();
 
 	return DamageAmount;
+}
+
+void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 }
