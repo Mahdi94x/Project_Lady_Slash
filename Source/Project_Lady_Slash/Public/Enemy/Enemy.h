@@ -20,7 +20,7 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 	void DirectionalHitReact(const FVector& ImpactPoint);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
+	
 protected:
 	virtual void BeginPlay() override;
 	void Die();
@@ -29,6 +29,8 @@ protected:
 	bool InTargetRange(AActor* Target, double AcceptanceRaduis);
 	void MoveToTarget(AActor* Target);
 	AActor* SelectPatrolTarget();
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
 
 private:
 
@@ -67,6 +69,9 @@ private:
 	UPROPERTY(EditInstanceOnly, Category = "Enemy AI Navigation")
 	TArray<AActor*> PatrolTargets;
 
+	UPROPERTY(VisibleAnywhere, Category = "Enemy AI Navigation")
+	class UPawnSensingComponent* EnemySensing;
+
 	UPROPERTY()
 	AActor* CombatTarget;
 
@@ -83,10 +88,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation")
 	float WaitTimeMax = 8.f;
 
-	UPROPERTY(EditAnywhere)
-	double CombatRaduis = 500.f;
+	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation")
+	double CombatRadius = 500.f;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation")
+	double AttackRadius = 150.f;
 
 	UPROPERTY(EditAnywhere)
 	double PatrolRaduis = 200.f;
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 	/*Enemy Navigation*/
 };
