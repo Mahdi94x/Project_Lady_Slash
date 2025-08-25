@@ -1,30 +1,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter/BaseCharacter.h"
 #include "InputActionValue.h"
 #include "CharacterTypesEnums.h"
 #include "SlashCharacter.generated.h"
 
 UCLASS()
-class PROJECT_LADY_SLASH_API ASlashCharacter : public ACharacter
+class PROJECT_LADY_SLASH_API ASlashCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
 
 	ASlashCharacter();
-
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void Jump() override;
+	
 
 protected:
 
 	virtual void BeginPlay() override;
-
 	/*InputActions*/
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
 	class UInputMappingContext* EchoMappingContext;
@@ -49,8 +46,7 @@ protected:
 	/*InputActions*/
 
 	/*Montages Variables*/
-	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
-	UAnimMontage* AttackMontage;
+	
 
 	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
 	UAnimMontage* EquipMontage;
@@ -60,25 +56,20 @@ protected:
 	void EchoMove(const FInputActionValue& Value);
 	void EchoLook(const FInputActionValue& Value);
 	void EKeyPressed();
-	void Attack();
+	virtual void Attack() override;
 	void Dodge();
 	/*Callbacks for Input*/
 
 	/*Play Montage Sections*/
-	void PlayAttackMontage();
-
-	bool CanEchoAttack();
-
+	virtual void PlayAttackMontage() override;
+	virtual bool CanCharacterAttack() override;
 	bool CanEchoUnEquipWeapon();
-
 	bool CanEchoEquipWeapon();
-
 	void PlayEquipMontage(const FName& SectionName);
 	/*Play Montage Sections*/
 
 	/*Anim Notifies*/
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
+	virtual void AttackEnd() override;
 
 	UFUNCTION(BlueprintCallable)
 	void AddToSpineSocket();
@@ -88,10 +79,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void EquippingEnd();
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponBoxCollision(ECollisionEnabled::Type CollisionEnabled);
-
 	/*Anim Notifies*/
 
 private:
@@ -118,8 +105,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	class AItem* OverlappingItem;
 
-	UPROPERTY(VisibleAnyWhere, Category = Weapon)
-	class AWeapon* EquippedWeapon;
+	
 	/*Pointers*/
 
 public: 

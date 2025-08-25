@@ -187,15 +187,6 @@ void ASlashCharacter::EquippingEnd()
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
 
-void ASlashCharacter::SetWeaponBoxCollision(ECollisionEnabled::Type CollisionEnabled)
-{
-	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
-	{
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
-		EquippedWeapon->IgnoreActorsPerSwing.Empty(); /*One Hit Per Swing*/
-	}
-}
-
 /*Attacking*/
 void ASlashCharacter::PlayAttackMontage()
 {
@@ -223,7 +214,7 @@ void ASlashCharacter::PlayAttackMontage()
 	}
 }
 
-bool ASlashCharacter::CanEchoAttack()
+bool ASlashCharacter::CanCharacterAttack()
 {
 	return EchoActionState == EActionState::EAS_Unoccupied && 
 		EchoCurrentState != ECharacterState::ECS_UnEquipped;
@@ -231,7 +222,7 @@ bool ASlashCharacter::CanEchoAttack()
 
 void ASlashCharacter::Attack()
 {
-	if (CanEchoAttack())
+	if (CanCharacterAttack())
 	{
 		PlayAttackMontage();
 		EchoActionState = EActionState::EAS_Attacking;

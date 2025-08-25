@@ -1,0 +1,149 @@
+#include "BaseCharacter/BaseCharacter.h"
+#include "Items/Weapon/Weapon.h"
+#include "Components/BoxComponent.h"
+#include "Components/AttributeComponent.h"
+
+
+ABaseCharacter::ABaseCharacter()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	CharacterAttributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("CharacterAttributes"));
+
+}
+
+void ABaseCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+void ABaseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ABaseCharacter::SetWeaponBoxCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->IgnoreActorsPerSwing.Empty(); /*One Hit Per Swing*/
+	}
+}
+
+void ABaseCharacter::Attack()
+{
+
+}
+
+void ABaseCharacter::PlayAttackMontage()
+{
+
+}
+
+bool ABaseCharacter::CanCharacterAttack()
+{
+	return false;
+}
+
+void ABaseCharacter::AttackEnd()
+{
+
+}
+
+void ABaseCharacter::Die()
+{
+
+}
+
+void ABaseCharacter::PlayHitReactMontage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitReactMontage)
+	{
+		AnimInstance->Montage_Play(HitReactMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
+}
+
+void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
+{
+	/*Calculating the angle for enemy direction hit react*/
+	const FVector Forward = this->GetActorForwardVector(); // magnitude = 1, normalized
+	// Lower Impact Point from BoxHit() to the enemy's actor location Z
+	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal(); //magnitude = 1, normalizd
+
+	// Forward (DOT) ToHit = |Forward||ToHit|Cos(theta)
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+
+	// Take the inverse cosine to get the angle
+	double Theta = FMath::Acos(CosTheta);
+
+	// convert from radians to degree
+	Theta = FMath::RadiansToDegrees(Theta);
+
+	// if CrossProduct points down, Theata should be negative
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1;
+	}
+
+	FName SectionName("FromBack");
+
+	if (Theta >= -45.f && Theta < 45.f)
+	{
+		SectionName = FName("FromFront");
+	}
+	else if (Theta >= -135.f && Theta < -45.f)
+	{
+		SectionName = FName("FromLeft");
+	}
+	else if (Theta >= 45.f && Theta < 135.f)
+	{
+		SectionName = FName("FromRight");
+	}
+
+	PlayHitReactMontage(SectionName);
+
+	/*Debugging
+
+	DRAW_SPHERE_Color(ImpactPoint, FColor::Orange);
+
+	// Message on the viewport
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Theta));
+	}
+
+	// Drawing Forward Vector
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + Forward * 60,
+		5.f,
+		FColor::Red,
+		5.f);
+
+	// Drawing ToHit Vector
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + ToHit * 60,
+		5.f,
+		FColor::Green,
+		5.f);
+
+	UKismetSystemLibrary::DrawDebugArrow(
+		this,
+		GetActorLocation(),
+		GetActorLocation() + CrossProduct * 100,
+		5.f,
+		FColor::Blue,
+		5.f);
+	Debugging*/
+}
+
