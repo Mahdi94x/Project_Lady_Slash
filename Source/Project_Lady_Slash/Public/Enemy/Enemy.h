@@ -18,7 +18,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	
+	virtual void Destroyed() override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
@@ -31,6 +31,8 @@ protected:
 	void PawnSeen(APawn* SeenPawn);
 
 private:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeapon> WeaponClass;
 
 	/*Play Montage Sections*/
 	void PlayDeathMontage();

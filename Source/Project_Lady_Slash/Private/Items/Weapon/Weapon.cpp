@@ -6,7 +6,6 @@
 #include "Interfaces/HitInterface.h"
 #include "NiagaraComponent.h"
 
-
 AWeapon::AWeapon()
 {
 	WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponBox"));
@@ -20,6 +19,7 @@ AWeapon::AWeapon()
 
 	BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("BoxTraceEnd"));
 	BoxTraceEnd->SetupAttachment(GetRootComponent());
+
 }
 
 void AWeapon::BeginPlay()
@@ -99,14 +99,7 @@ void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName, AA
 	SetInstigator(NewInstigator);
 	AttachWeaponMeshToSocket(InParent, InSocketName);
 	this->ItemCurrentState = EItemState::EIS_Equipped;
-	if (EquipSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(
-			this,
-			EquipSound,
-			this->GetActorLocation()
-		);
-	}
+	
 	if (OverlapSphere) {OverlapSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);}
 	if (EmbersEffect) {EmbersEffect->Deactivate();}
 }

@@ -105,7 +105,8 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	class AItem* OverlappingItem;
 
-	
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	USoundBase* EquipSound;
 	/*Pointers*/
 
 public: 

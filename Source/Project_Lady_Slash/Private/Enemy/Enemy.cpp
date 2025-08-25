@@ -9,6 +9,7 @@
 #include "AIController.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Items/Weapon/Weapon.h"
 
 AEnemy::AEnemy()
 {
@@ -46,6 +47,15 @@ void AEnemy::BeginPlay()
 	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 3.f);
 	
 	if (EnemySensing) { EnemySensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen); }
+
+	UWorld* World = GetWorld();
+	if (World && WeaponClass)
+	{
+		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
+		DefaultWeapon->WeaponBeingEquip(this->GetMesh(), FName("WeaponSocket"), this, this);
+		EquippedWeapon = DefaultWeapon;
+
+	}
 	
 }
 
@@ -254,6 +264,14 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	UE_LOG(LogTemp, Warning, TEXT("Chase From TakeDamage()"));
 
 	return DamageAmount;
+}
+
+void AEnemy::Destroyed()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Destroy();
+	}
 }
 
 void AEnemy::PawnSeen(APawn* SeenPawn)

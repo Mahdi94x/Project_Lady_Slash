@@ -8,7 +8,7 @@
 #include "GroomComponent.h"
 #include "Items/Weapon/Weapon.h"
 #include "Components/BoxComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
@@ -121,6 +121,14 @@ void ASlashCharacter::EKeyPressed()
 			EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
 			OverlappingItem = nullptr; /*setting the overlapped item to nullptr to avoid reoverlapping with the same weapon equipped*/
 			EquippedWeapon = OverlappingWeapon;
+			if (EquipSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(
+					this,
+					EquipSound,
+					this->GetActorLocation()
+				);
+			}
 		}
 	}
 	/*After Picking Up The Weapon*/
