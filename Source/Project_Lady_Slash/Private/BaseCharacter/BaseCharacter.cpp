@@ -2,7 +2,7 @@
 #include "Items/Weapon/Weapon.h"
 #include "Components/BoxComponent.h"
 #include "Components/AttributeComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -42,7 +42,7 @@ void ABaseCharacter::PlayAttackMontage()
 
 }
 
-bool ABaseCharacter::CanCharacterAttack()
+bool ABaseCharacter::CanBaseCharacterAttack()
 {
 	return false;
 }
@@ -50,6 +50,44 @@ bool ABaseCharacter::CanCharacterAttack()
 void ABaseCharacter::AttackEnd()
 {
 
+}
+
+bool ABaseCharacter::IsBaseCharacterAlive()
+{
+	return CharacterAttributes && CharacterAttributes->IsCharacterAlive();
+}
+
+void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint)
+{
+	if (HitSounds)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			HitSounds,
+			ImpactPoint
+		);
+	}
+}
+
+void ABaseCharacter::SpawnHitParticles(const FVector& ImpactPoint)
+{
+	UWorld* World = GetWorld();
+	if (World && HitParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			World,
+			HitParticle,
+			ImpactPoint
+		);
+	}
+}
+
+void ABaseCharacter::HandleDamageBaseCharacter(float DamageAmount)
+{
+	if (CharacterAttributes)
+	{
+		CharacterAttributes->UpdateCurrentHealth(DamageAmount);
+	}
 }
 
 void ABaseCharacter::Die()

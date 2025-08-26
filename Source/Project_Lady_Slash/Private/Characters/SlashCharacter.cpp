@@ -224,7 +224,7 @@ void ASlashCharacter::PlayAttackMontage()
 	}
 }
 
-bool ASlashCharacter::CanCharacterAttack()
+bool ASlashCharacter::CanBaseCharacterAttack()
 {
 	return EchoActionState == EActionState::EAS_Unoccupied && 
 		EchoCurrentState != ECharacterState::ECS_UnEquipped;
@@ -233,7 +233,7 @@ bool ASlashCharacter::CanCharacterAttack()
 void ASlashCharacter::Attack()
 {
 	Super::Attack();
-	if (CanCharacterAttack())
+	if (CanBaseCharacterAttack())
 	{
 		PlayAttackMontage();
 		EchoActionState = EActionState::EAS_Attacking;

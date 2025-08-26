@@ -62,7 +62,7 @@ protected:
 
 	/*Play Montage Sections*/
 	virtual void PlayAttackMontage() override;
-	virtual bool CanCharacterAttack() override;
+	virtual bool CanBaseCharacterAttack() override;
 	bool CanEchoUnEquipWeapon();
 	bool CanEchoEquipWeapon();
 	void PlayEquipMontage(const FName& SectionName);
