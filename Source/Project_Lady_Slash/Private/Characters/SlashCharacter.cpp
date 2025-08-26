@@ -198,6 +198,8 @@ void ASlashCharacter::EquippingEnd()
 /*Attacking*/
 void ASlashCharacter::PlayAttackMontage()
 {
+	Super::PlayAttackMontage();
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
@@ -230,6 +232,7 @@ bool ASlashCharacter::CanCharacterAttack()
 
 void ASlashCharacter::Attack()
 {
+	Super::Attack();
 	if (CanCharacterAttack())
 	{
 		PlayAttackMontage();

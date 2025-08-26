@@ -108,6 +108,7 @@ void AEnemy::CheckCombatTarget()
 		EnemyState = EEnemyState::EES_Attacking;
 		UE_LOG(LogTemp, Warning, TEXT("Attack"));
 		/*TODO: Implement Attacking Behavior - play attack montage - cause damage to the character*/
+		Attack();
 	}
 }
 
@@ -236,7 +237,7 @@ void AEnemy::MoveToTarget(AActor* Target)
 	
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);
-	MoveRequest.SetAcceptanceRadius(15.f);
+	MoveRequest.SetAcceptanceRadius(50.f);
 	EnemyAIController->MoveTo(MoveRequest);
 }
 
@@ -290,6 +291,42 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 			this->MoveToTarget(CombatTarget);
 			UE_LOG(LogTemp, Warning, TEXT("Chase from PawnSeen(APawn* SeenPawn)"));
 		}
+	}
+}
+
+void AEnemy::Attack()
+{
+	Super::Attack();
+	this->PlayAttackMontage();
+}
+
+void AEnemy::PlayAttackMontage()
+{
+	Super::PlayAttackMontage();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		const int32 SectionSelection = FMath::RandRange(0, 2);
+		FName SectionName = NAME_None;
+
+		switch (SectionSelection)
+		{
+		case 0:
+			SectionName = FName("Attack0");
+			break;
+		case 1:
+			SectionName = FName("Attack1");
+			break;
+		case 2:
+			SectionName = FName("Attack2");
+			break;
+
+		default:
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
 }
 

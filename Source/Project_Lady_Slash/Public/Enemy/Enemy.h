@@ -29,6 +29,8 @@ protected:
 	AActor* SelectPatrolTarget();
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
+	virtual void Attack() override;
+	virtual void PlayAttackMontage() override;
 
 private:
 	UPROPERTY(EditAnywhere)
