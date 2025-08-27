@@ -99,7 +99,6 @@ void AEnemy::CheckCombatTarget()
 		{
 			EnemyStartPatrolling();
 		}
-		
 		UE_LOG(LogTemp, Warning, TEXT("LoseInterest, Patrol"));
 	}
 	else if (IsCharacterOutsideAttackRadius() && !IsEnemyChasing())
@@ -319,6 +318,7 @@ void AEnemy::ClearAttackTimer()
 
 void AEnemy::Attack()
 {
+	EnemyState = EEnemyState::EES_Engaged;
 	Super::Attack();
 	this->PlayAttackMontage();
 }
@@ -327,6 +327,13 @@ bool AEnemy::CanBaseCharacterAttack()
 {
 	bool bCanEnemyAttack = IsCharacterInsideAttackRadius() &&
 		!IsEnemyAttacking() &&
-		!IsEnemyDead() ;
+		!IsEnemyDead() &&
+		!IsEnemyEngaged();
 	return bCanEnemyAttack;
+}
+
+void AEnemy::AttackEnd()
+{
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
 }

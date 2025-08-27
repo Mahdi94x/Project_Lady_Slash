@@ -46,6 +46,7 @@ protected:
 	void ClearAttackTimer();
 	virtual void Attack() override;
 	virtual bool CanBaseCharacterAttack() override;
+	virtual void AttackEnd() override;
 
 private:
 
@@ -85,7 +86,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	float WaitTimeMax = 8.f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
-	double CombatRadius = 500.f;
+	double CombatRadius = 1000.f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	double AttackRadius = 150.f;
 	UPROPERTY(EditAnywhere)
