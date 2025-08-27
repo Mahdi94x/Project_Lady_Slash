@@ -34,7 +34,7 @@ protected:
 	virtual void Die() override;
 	virtual void HandleDamageBaseCharacter(float DamageAmount) override;
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose EnemyDeathPose;
+	TEnumAsByte<EDeathPose> EnemyDeathPose;
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 	bool InTargetRange(AActor* Target, double AcceptanceRaduis);
@@ -45,7 +45,6 @@ protected:
 	void ClearPatrolTimer();
 	void ClearAttackTimer();
 	virtual void Attack() override;
-	virtual void PlayAttackMontage() override;
 	virtual bool CanBaseCharacterAttack() override;
 
 private:
@@ -54,7 +53,7 @@ private:
 	TSubclassOf<class AWeapon> WeaponClass;
 
 	/*Play Montage Sections*/
-	void PlayDeathMontage();
+	virtual int32 PlayDeathMontage() override;
 	/*Play Montage Sections*/
 
 	/*HealthBar Component*/
@@ -98,5 +97,8 @@ private:
 	float EnemyAttackMin = 0.5f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	float EnemyAttackMax = 1.f;
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+	float DeathLifeSpan = 8.f;
 	/*EnemyAI Navigation / Behavior*/
 };

@@ -196,34 +196,6 @@ void ASlashCharacter::EquippingEnd()
 }
 
 /*Attacking*/
-void ASlashCharacter::PlayAttackMontage()
-{
-	Super::PlayAttackMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		const int32 SectionSelection = FMath::RandRange(0, 1);
-		FName SectionName = NAME_None;
-
-		switch (SectionSelection)
-		{
-		case 0:
-			SectionName = FName("Attack0");
-			break;
-		case 1:
-			SectionName = FName("Attack1");
-			break;
-
-		default:
-			break;
-		}
-
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
-}
-
 bool ASlashCharacter::CanBaseCharacterAttack()
 {
 	return EchoActionState == EActionState::EAS_Unoccupied && 

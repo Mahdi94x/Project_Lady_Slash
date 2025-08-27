@@ -61,7 +61,6 @@ protected:
 	/*Callbacks for Input*/
 
 	/*Play Montage Sections*/
-	virtual void PlayAttackMontage() override;
 	virtual bool CanBaseCharacterAttack() override;
 	bool CanEchoUnEquipWeapon();
 	bool CanEchoEquipWeapon();

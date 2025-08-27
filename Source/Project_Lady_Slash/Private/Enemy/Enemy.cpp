@@ -1,5 +1,4 @@
 #include "Enemy/Enemy.h"
-#include "Components/CapsuleComponent.h"
 #include "Project_Lady_Slash/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/AttributeComponent.h"
@@ -9,6 +8,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Items/Weapon/Weapon.h"
+#include "Components/CapsuleComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -182,13 +182,14 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 void AEnemy::Die()
 {
+	EnemyState = EEnemyState::EES_Dead;
 	ClearPatrolTimer();
 	ClearAttackTimer();
-	EnemyState = EEnemyState::EES_Dead;
-	HideHealthBar();
 	PlayDeathMontage();
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->SetLifeSpan(5.f);
+	HideHealthBar();
+	DisableCapsule();
+	this->SetLifeSpan(DeathLifeSpan);
+	//GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 void AEnemy::HandleDamageBaseCharacter(float DamageAmount)
@@ -201,47 +202,15 @@ void AEnemy::HandleDamageBaseCharacter(float DamageAmount)
 	}
 }
 
-void AEnemy::PlayDeathMontage()
+int32 AEnemy::PlayDeathMontage()
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && DeathMontage)
+	const int32 Selection = Super::PlayDeathMontage();
+	TEnumAsByte<EDeathPose> DeathPose(Selection);
+	if (DeathPose < EDeathPose::EDP_MAX)
 	{
-		AnimInstance->Montage_Play(DeathMontage);
-
-		const int32 SectionSelection = FMath::RandRange(0, 5);
-		FName SectionName = NAME_None;
-
-		switch (SectionSelection)
-		{
-		case 0:
-			SectionName = FName("Death0");
-			EnemyDeathPose = EDeathPose::EDP_Death0;
-			break;
-		case 1:
-			SectionName = FName("Death1");
-			EnemyDeathPose = EDeathPose::EDP_Death1;
-			break;
-		case 2:
-			SectionName = FName("Death2");
-			EnemyDeathPose = EDeathPose::EDP_Death2;
-			break;
-		case 3:
-			SectionName = FName("Death3");
-			EnemyDeathPose = EDeathPose::EDP_Death3;
-			break;
-		case 4:
-			SectionName = FName("Death4");
-			EnemyDeathPose = EDeathPose::EDP_Death4;
-			break;
-		case 5:
-			SectionName = FName("Death5");
-			EnemyDeathPose = EDeathPose::EDP_Death5;
-			break;
-		default:
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
+		EnemyDeathPose = DeathPose;
 	}
+	return Selection;
 }
 
 void AEnemy::HideHealthBar()
@@ -352,36 +321,6 @@ void AEnemy::Attack()
 {
 	Super::Attack();
 	this->PlayAttackMontage();
-}
-
-void AEnemy::PlayAttackMontage()
-{
-	Super::PlayAttackMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		const int32 SectionSelection = FMath::RandRange(0, 2);
-		FName SectionName = NAME_None;
-
-		switch (SectionSelection)
-		{
-		case 0:
-			SectionName = FName("Attack0");
-			break;
-		case 1:
-			SectionName = FName("Attack1");
-			break;
-		case 2:
-			SectionName = FName("Attack2");
-			break;
-
-		default:
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
 }
 
 bool AEnemy::CanBaseCharacterAttack()

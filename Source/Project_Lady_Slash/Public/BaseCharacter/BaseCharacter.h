@@ -22,7 +22,6 @@ protected:
 	class AWeapon* EquippedWeapon;
 	virtual void Attack();
 	virtual void Die();
-	virtual void PlayAttackMontage();
 	virtual bool CanBaseCharacterAttack();
 	void PlayHitReactMontage(const FName& SectionName);
 	void DirectionalHitReact(const FVector& ImpactPoint);
@@ -42,6 +41,15 @@ protected:
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	virtual void HandleDamageBaseCharacter(float DamageAmount);
+	virtual int32 PlayDeathMontage();
+	virtual int32 PlayAttackMontage();
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
+	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+	UPROPERTY(EditDefaultsOnly, Category = "Character Montages")
+	TArray<FName> AttackMontageSections;
+	UPROPERTY(EditDefaultsOnly, Category = "Character Montages")
+	TArray<FName> DeathMontageSections;
+	void DisableCapsule();
 
 private:
 	/*BaseCharacter Effects*/
