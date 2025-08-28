@@ -8,6 +8,7 @@
 #include "GroomComponent.h"
 #include "Items/Weapon/Weapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/StaticMeshComponent.h"
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
@@ -19,6 +20,12 @@ ASlashCharacter::ASlashCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
+
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 
 	EchoSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("EchoCameraBoom"));
 	EchoSpringArm->SetupAttachment(GetRootComponent());
@@ -52,7 +59,7 @@ void ASlashCharacter::BeginPlay()
 			Subsystem->AddMappingContext(EchoMappingContext , 0);
 		}
 	}
-	Tags.Add(FName("SlashCharacter"));
+	Tags.Add(FName("EngageableTarget"));
 }
 
 /*PlayerEnhancedInput*/
@@ -241,4 +248,11 @@ void ASlashCharacter::Dodge()
 void ASlashCharacter::Jump()
 {
 	Super::Jump();
+}
+
+/*GitHit Implementation*/
+void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	PlayHitSound(ImpactPoint);
+	SpawnHitParticles(ImpactPoint);
 }

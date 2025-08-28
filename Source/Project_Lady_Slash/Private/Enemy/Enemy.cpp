@@ -144,6 +144,7 @@ void AEnemy::InitializeEnemy()
 	GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 3.f);
 	HideHealthBar();
 	SpawnDefaultWeapon();
+	Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::CheckPatrolTarget()
@@ -326,7 +327,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		EnemyState != EEnemyState::EES_Dead &&
 		EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking &&
-		SeenPawn->ActorHasTag(FName("SlashCharacter"));
+		SeenPawn->ActorHasTag(FName("EngageableTarget"));
 
 	if (bShouldChaseTarget)
 	{

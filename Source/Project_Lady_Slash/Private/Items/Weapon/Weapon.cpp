@@ -29,45 +29,16 @@ void AWeapon::BeginPlay()
 	WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnWeaponBoxOverlap);
 }
 
-void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	Super::OnSphereBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-}
-
-void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::OnSphereEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
-}
-
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FVector Start = BoxTraceStart->GetComponentLocation();
-	const FVector End = BoxTraceEnd->GetComponentLocation();
+	if (ActorIsSameType(OtherActor)) return; // Avoiding enemy hitting eachothers or themselves
 
-	TArray<AActor*> ActorsToIgnore;
 	FHitResult BoxHit;
-
-	for (AActor* Actor : IgnoreActorsPerSwing) 
-	{
-		ActorsToIgnore.AddUnique(Actor); /*One Hit Per Swing*/
-	}
-
-	UKismetSystemLibrary::BoxTraceSingle(
-		this,
-		Start,
-		End,
-		FVector(5.f,5.f,5.f),
-		BoxTraceStart->GetComponentRotation(),
-		ETraceTypeQuery::TraceTypeQuery1,
-		false,
-		ActorsToIgnore,
-		EDrawDebugTrace::None,
-		BoxHit,
-		true
-		);
+	BoxTrace(BoxHit);
 
 	if (BoxHit.GetActor())
 	{
+		if (ActorIsSameType(BoxHit.GetActor())) return;
 		UGameplayStatics::ApplyDamage(
 			BoxHit.GetActor(),
 			this->WeaponDamage,
@@ -76,16 +47,51 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 			UDamageType::StaticClass()
 		);
 
-		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-		if (HitInterface)
-		{
-			HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint);
-		}
-
-		IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
+		ExecuteGetHit(BoxHit);
 
 		CreateField(BoxHit.ImpactPoint);
 	}
+}
+
+bool AWeapon::ActorIsSameType(AActor* OtherActor)
+{
+	return GetOwner()->ActorHasTag(FName("Enemy")) && OtherActor->ActorHasTag(FName("Enemy"));
+}
+
+void AWeapon::ExecuteGetHit(FHitResult& BoxHit)
+{
+	IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+	if (HitInterface)
+	{
+		HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint);
+	}
+}
+
+void AWeapon::BoxTrace(FHitResult& BoxHit)
+{
+	const FVector Start = BoxTraceStart->GetComponentLocation();
+	const FVector End = BoxTraceEnd->GetComponentLocation();
+
+	TArray<AActor*> ActorsToIgnore;
+	for (AActor* Actor : IgnoreActorsPerSwing)
+	{
+		ActorsToIgnore.AddUnique(Actor); /*One Hit Per Swing*/
+	}
+	UKismetSystemLibrary::BoxTraceSingle(
+		this,
+		Start,
+		End,
+		BoxTraceExtent,
+		BoxTraceStart->GetComponentRotation(),
+		ETraceTypeQuery::TraceTypeQuery1,
+		false,
+		ActorsToIgnore,
+		bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+		BoxHit,
+		true
+	);
+
+	IgnoreActorsPerSwing.AddUnique(BoxHit.GetActor()); /*One Hit Per Swing*/
 }
 
 void AWeapon::Tick(float DeltaTime)
@@ -99,9 +105,18 @@ void AWeapon::WeaponBeingEquip(USceneComponent* InParent, FName InSocketName, AA
 	SetInstigator(NewInstigator);
 	AttachWeaponMeshToSocket(InParent, InSocketName);
 	this->ItemCurrentState = EItemState::EIS_Equipped;
-	
-	if (OverlapSphere) {OverlapSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);}
-	if (EmbersEffect) {EmbersEffect->Deactivate();}
+	DisableSphereCollision();
+	DeactivateEmbers();
+}
+
+void AWeapon::DeactivateEmbers()
+{
+	if (EmbersEffect) { EmbersEffect->Deactivate(); }
+}
+
+void AWeapon::DisableSphereCollision()
+{
+	if (OverlapSphere) { OverlapSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision); }
 }
 
 void AWeapon::AttachWeaponMeshToSocket(USceneComponent* InParent, const FName& InSocketName)
