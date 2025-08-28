@@ -12,50 +12,21 @@ class PROJECT_LADY_SLASH_API ASlashCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-
 	ASlashCharacter();
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
 	
-
 protected:
 
 	virtual void BeginPlay() override;
-	/*InputActions*/
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputMappingContext* EchoMappingContext;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	class UInputAction* EchoMovementAction;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	UInputAction* EchoLookAction;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	UInputAction* EchoJumpAction;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	UInputAction* EchoEKeyAction;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	UInputAction* EchoAttackAction;
-
-	UPROPERTY(EditAnywhere, Category = "Echo Input")
-	UInputAction* EchoDodgeAction;
-	/*InputActions*/
-
-	/*Montages Variables*/
-	
-
-	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
-	UAnimMontage* EquipMontage;
-	/*Montages Variables*/
-
 	/*Callbacks for Input*/
 	void EchoMove(const FInputActionValue& Value);
 	void EchoLook(const FInputActionValue& Value);
 	void EKeyPressed();
+	void EchoArmTheWeapon();
+	void EchoDisarmTheWepaon();
+	void EchoPlayEquipSound();
+	void EchoEquippingTheWeapon(AWeapon* Weapon);
 	virtual void Attack() override;
 	void Dodge();
 	/*Callbacks for Input*/
@@ -69,16 +40,35 @@ protected:
 
 	/*Anim Notifies*/
 	virtual void AttackEnd() override;
-
 	UFUNCTION(BlueprintCallable)
 	void AddToSpineSocket();
-
 	UFUNCTION(BlueprintCallable)
 	void AddToHandSocket();
-
 	UFUNCTION(BlueprintCallable)
 	void EquippingEnd();
 	/*Anim Notifies*/
+
+	/*InputActions*/
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	class UInputMappingContext* EchoMappingContext;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	class UInputAction* EchoMovementAction;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	UInputAction* EchoLookAction;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	UInputAction* EchoJumpAction;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	UInputAction* EchoEKeyAction;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	UInputAction* EchoAttackAction;
+	UPROPERTY(EditAnywhere, Category = "Echo Input")
+	UInputAction* EchoDodgeAction;
+	/*InputActions*/
+
+	/*Montages Variables*/
+	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
+	UAnimMontage* EquipMontage;
+	/*Montages Variables*/
 
 private:
 	/*States*/
@@ -86,7 +76,7 @@ private:
 	EActionState EchoActionState = EActionState::EAS_Unoccupied;
 	/*States*/
 
-	/*Components*/
+	/*Echo Components*/
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* EchoSpringArm;
 
@@ -98,7 +88,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* EchoEyebrows;
-	/*Components*/
+	/*Echo Components*/
 
 	/*Pointers*/
 	UPROPERTY(VisibleInstanceOnly)

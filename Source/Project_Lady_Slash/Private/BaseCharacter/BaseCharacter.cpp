@@ -9,6 +9,7 @@ ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	CharacterAttributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("CharacterAttributes"));
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 }
 

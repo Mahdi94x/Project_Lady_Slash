@@ -7,13 +7,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
 #include "Items/Weapon/Weapon.h"
-#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
@@ -56,7 +55,7 @@ void ASlashCharacter::BeginPlay()
 	Tags.Add(FName("SlashCharacter"));
 }
 
-/*PlayerInput*/
+/*PlayerEnhancedInput*/
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -71,13 +70,6 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(EchoAttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 		EnhancedInputComponent->BindAction(EchoDodgeAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Dodge);
 	}
-}
-
-/*Tick Function*/
-void ASlashCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 /*Movement and Looking*/
@@ -117,18 +109,8 @@ void ASlashCharacter::EKeyPressed()
 		AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 		if (OverlappingWeapon)
 		{
-			OverlappingWeapon->WeaponBeingEquip(this->GetMesh(), FName("RightHandSocket"), this, this);
-			EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
-			OverlappingItem = nullptr; /*setting the overlapped item to nullptr to avoid reoverlapping with the same weapon equipped*/
-			EquippedWeapon = OverlappingWeapon;
-			if (EquipSound)
-			{
-				UGameplayStatics::PlaySoundAtLocation(
-					this,
-					EquipSound,
-					this->GetActorLocation()
-				);
-			}
+			EchoEquippingTheWeapon(OverlappingWeapon);
+			EchoPlayEquipSound();
 		}
 	}
 	/*After Picking Up The Weapon*/
@@ -136,19 +118,49 @@ void ASlashCharacter::EKeyPressed()
 	{
 		if (CanEchoUnEquipWeapon())
 		{
-			FName SectionName = FName("EquipToBack");
-			PlayEquipMontage(SectionName);
-			EchoCurrentState = ECharacterState::ECS_UnEquipped;
-			EchoActionState = EActionState::EAS_EquippingWeapon;
+			EchoDisarmTheWepaon();
 		}
 		else if (CanEchoEquipWeapon())
 		{
-			FName SectionName = FName("EquipToHand");
-			PlayEquipMontage(SectionName);
-			EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
-			EchoActionState = EActionState::EAS_EquippingWeapon;
+			EchoArmTheWeapon();
 		}
 	}
+}
+
+void ASlashCharacter::EchoArmTheWeapon()
+{
+	FName SectionName = FName("EquipToHand");
+	PlayEquipMontage(SectionName);
+	EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
+	EchoActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void ASlashCharacter::EchoDisarmTheWepaon()
+{
+	FName SectionName = FName("EquipToBack");
+	PlayEquipMontage(SectionName);
+	EchoCurrentState = ECharacterState::ECS_UnEquipped;
+	EchoActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void ASlashCharacter::EchoPlayEquipSound()
+{
+	if (EquipSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			EquipSound,
+			this->GetActorLocation()
+		);
+	}
+}
+
+void ASlashCharacter::EchoEquippingTheWeapon(AWeapon* Weapon)
+{
+	Weapon->WeaponBeingEquip(this->GetMesh(), FName("RightHandSocket"), this, this);
+	EchoCurrentState = ECharacterState::ECS_EquippedOneHanded;
+	OverlappingItem = nullptr; /*setting the overlapped item to nullptr to avoid reoverlapping with the same weapon equipped*/
+	EquippedWeapon = Weapon;
 }
 
 bool ASlashCharacter::CanEchoUnEquipWeapon()
@@ -194,6 +206,7 @@ void ASlashCharacter::EquippingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
+/*Overlapping - Equipping - Disarming*/
 
 /*Attacking*/
 bool ASlashCharacter::CanBaseCharacterAttack()
@@ -216,6 +229,7 @@ void ASlashCharacter::AttackEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
+/*Attacking*/
 
 /*Dodge*/
 void ASlashCharacter::Dodge()
