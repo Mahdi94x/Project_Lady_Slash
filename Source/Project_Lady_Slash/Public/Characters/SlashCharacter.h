@@ -16,7 +16,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
 	/** <IHitInterface*/
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	/** </IHitInterface*/
 	
 protected:
@@ -49,6 +49,8 @@ protected:
 	void AddToHandSocket();
 	UFUNCTION(BlueprintCallable)
 	void EquippingEnd();
+	UFUNCTION(BlueprintCallable)
+	void HitReactingEnd();
 	/*Anim Notifies*/
 
 	/*InputActions*/

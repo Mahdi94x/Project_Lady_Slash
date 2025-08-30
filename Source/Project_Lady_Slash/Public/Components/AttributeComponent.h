@@ -21,14 +21,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-
+	/*Character Attributes Variables*/
 	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float CurrentHealth;
 
 	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float MaxHealth;
+	/*Character Attributes Variables*/
 
-public: /*Setters - Getters - Updater*/
+public: /*Setters - Getters - Updaters*/
 
 	FORCEINLINE void UpdateCurrentHealth(float Damage);
 	FORCEINLINE float GetCurrentHealthPercent();

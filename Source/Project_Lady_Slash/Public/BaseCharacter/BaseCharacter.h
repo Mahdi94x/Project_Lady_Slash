@@ -17,6 +17,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	/** <IHitInterface*/
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+	/** </IHitInterface*/
 	virtual void Attack();
 	virtual void Die();
 	virtual bool CanBaseCharacterAttack();

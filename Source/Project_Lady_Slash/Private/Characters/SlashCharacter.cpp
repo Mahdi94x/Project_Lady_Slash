@@ -42,7 +42,6 @@ ASlashCharacter::ASlashCharacter()
 	EchoEyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("EchoEyebrows"));
 	EchoEyebrows->SetupAttachment(GetMesh());
 	EchoEyebrows->AttachmentName = FString("head");
-
 }
 
 /*BeginPlay*/
@@ -213,6 +212,7 @@ void ASlashCharacter::EquippingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
+
 /*Overlapping - Equipping - Disarming*/
 
 /*Attacking*/
@@ -250,10 +250,15 @@ void ASlashCharacter::Jump()
 	Super::Jump();
 }
 
-/*GitHit Implementation*/
-void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+/*GitHit Implementation - HitReacting*/
+void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	PlayHitSound(ImpactPoint);
-	SpawnHitParticles(ImpactPoint);
-	DirectionalHitReact(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
+	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision); /*in case AttackMontage got interupted before DisablingBoxCollision*/
+	EchoActionState = EActionState::EAS_HitReaction;
+}
+
+void ASlashCharacter::HitReactingEnd()
+{
+	EchoActionState = EActionState::EAS_Unoccupied;
 }
