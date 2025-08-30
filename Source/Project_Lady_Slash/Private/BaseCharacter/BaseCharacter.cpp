@@ -4,6 +4,7 @@
 #include "Components/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Project_Lady_Slash/DebugMacros.h"
 
 ABaseCharacter::ABaseCharacter()
 {
