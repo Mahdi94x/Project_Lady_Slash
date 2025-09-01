@@ -50,7 +50,14 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 {
 	HandleDamageBaseCharacter(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
-	EnemyChaseTarget();
+	if (IsCharacterInsideAttackRadius())
+	{
+		EnemyState = EEnemyState::EES_Attacking;
+	}
+	else if (IsCharacterOutsideAttackRadius())
+	{
+		EnemyChaseTarget();
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Chase From TakeDamage()"));
 
 	return DamageAmount;
@@ -69,7 +76,9 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	if (!IsEnemyDead()) { ShowHealthBar(); }
 	ClearPatrolTimer();
-
+	ClearAttackTimer();
+	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision);
+	StopAttackMontage();
 }
 
 void AEnemy::BeginPlay()

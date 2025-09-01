@@ -40,6 +40,7 @@ protected:
 	TEnumAsByte<EDeathPose> EnemyDeathPose;
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	
 
 private:
 	/** AI Behavior */
@@ -77,8 +78,7 @@ private:
 	class UPawnSensingComponent* EnemySensing;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> WeaponClass;
-	UPROPERTY()
-	AActor* CombatTarget;
+	
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	double CombatRadius = 1000.f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
@@ -99,7 +99,7 @@ private:
 	float EnemyAttackMin = 0.5f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	float EnemyAttackMax = 1.f;
-	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation")
+	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation / Behavior")
 	float PatrollingSpeed = 125.f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	float ChasingSpeed = 300.f;

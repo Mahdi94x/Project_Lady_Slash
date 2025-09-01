@@ -32,16 +32,25 @@ protected:
 	virtual int32 PlayDeathMontage();
 	virtual int32 PlayAttackMontage();
 	void DisableCapsule();
+	void StopAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponBoxCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
-	
+	UFUNCTION(BlueprintCallable)
+	FVector GetTranslationWarpTarget();
+	UFUNCTION(BlueprintCallable)
+	FVector GetRotationWarpTarget();
+
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* CharacterAttributes;
 	UPROPERTY(VisibleAnyWhere, Category = Weapon)
 	class AWeapon* EquippedWeapon;
+	UPROPERTY(BlueprintReadOnly)
+	AActor* CombatTarget;
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+	double WarpTargetDistance = 75.f;
 
 private:
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);

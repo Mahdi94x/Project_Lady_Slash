@@ -58,6 +58,28 @@ void ABaseCharacter::AttackEnd()
 
 }
 
+FVector ABaseCharacter::GetTranslationWarpTarget()
+{
+	if(CombatTarget == nullptr) return FVector();
+
+	const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
+	const FVector Location = this->GetActorLocation();
+	FVector TargetToMe = (Location - CombatTargetLocation).GetSafeNormal();
+	TargetToMe *= WarpTargetDistance;
+	//DRAW_SPHERE(CombatTargetLocation + TargetToMe);
+
+	return CombatTargetLocation + TargetToMe;
+}
+
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if (CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+	return FVector();
+}
+
 bool ABaseCharacter::IsBaseCharacterAlive()
 {
 	return CharacterAttributes && CharacterAttributes->IsCharacterAlive();
@@ -223,4 +245,13 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 void ABaseCharacter::DisableCapsule()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABaseCharacter::StopAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Stop(0.25f, AttackMontage);
+	}
 }
