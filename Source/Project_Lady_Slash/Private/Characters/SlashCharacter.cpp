@@ -250,12 +250,18 @@ void ASlashCharacter::Jump()
 	Super::Jump();
 }
 
-/*GitHit Implementation - HitReacting*/
+/*GitHit Implementation - TakeDamage - HitReacting*/
 void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision); /*in case AttackMontage got interupted before DisablingBoxCollision*/
 	EchoActionState = EActionState::EAS_HitReaction;
+}
+
+float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HandleDamageBaseCharacter(DamageAmount);
+	return DamageAmount;
 }
 
 void ASlashCharacter::HitReactingEnd()

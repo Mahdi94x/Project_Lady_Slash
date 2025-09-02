@@ -13,7 +13,6 @@ class PROJECT_LADY_SLASH_API UAttributeComponent : public UActorComponent
 public:	
 
 	UAttributeComponent();
-
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
