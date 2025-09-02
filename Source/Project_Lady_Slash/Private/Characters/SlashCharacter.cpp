@@ -9,6 +9,9 @@
 #include "Items/Weapon/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
+#include "HUD/SlashHUD.h"
+#include "HUD/SlashOverlay.h"
+#include "Components/AttributeComponent.h"
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
@@ -48,16 +51,10 @@ ASlashCharacter::ASlashCharacter()
 void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	if (PlayerController)
-	{
-		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-		if (Subsystem)
-		{
-			Subsystem->AddMappingContext(EchoMappingContext , 0);
-		}
-	}
+
+	InitializeEnhancedInput(PlayerController);
+	InitializeSlashOverlay(PlayerController);
 	Tags.Add(FName("EngageableTarget"));
 }
 
@@ -78,10 +75,23 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+void ASlashCharacter::InitializeEnhancedInput(APlayerController* PlayerController)
+{
+	if (PlayerController)
+	{
+		/* Enhanced Input*/
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(EchoMappingContext, 0);
+		}
+	}
+}
+
 /*Movement and Looking*/
 void ASlashCharacter::EchoMove(const FInputActionValue& Value)
 {
-	if (EchoActionState != EActionState::EAS_Unoccupied) {return;} 
+	if (!IsEchoUnoccupied()) {return;} 
 	const FVector2D MovementVector = Value.Get<FVector2D>(); /*2D Vector x and y*/
 
 	const FRotator Rotation = Controller->GetControlRotation(); /*Controller Rotation*/
@@ -212,7 +222,6 @@ void ASlashCharacter::EquippingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
-
 /*Overlapping - Equipping - Disarming*/
 
 /*Attacking*/
@@ -247,7 +256,10 @@ void ASlashCharacter::Dodge()
 /*Jumping*/
 void ASlashCharacter::Jump()
 {
-	Super::Jump();
+	if (IsEchoUnoccupied())
+	{
+		Super::Jump();
+	}
 }
 
 /*GitHit Implementation - TakeDamage - HitReacting*/
@@ -261,6 +273,7 @@ void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* 
 float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamageBaseCharacter(DamageAmount);
+	SetEchoHUDHealth();
 	return DamageAmount;
 }
 
@@ -268,3 +281,39 @@ void ASlashCharacter::HitReactingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
+
+/*Slash HUD & Overlay*/
+void ASlashCharacter::InitializeSlashOverlay(APlayerController* PlayerController)
+{
+	if (PlayerController)
+	{
+		/*HUD*/
+		ASlashHUD* SlashHUD = Cast<ASlashHUD>(PlayerController->GetHUD());
+		if (SlashHUD)
+		{
+			SlashOverlay = SlashHUD->GetSlashOverlay();
+			SetEchoHUDHealth();
+			if (SlashOverlay && CharacterAttributes)
+			{
+				SlashOverlay->SetEchoStaminaProgressBarPercent(1.f);
+				SlashOverlay->SetSoulsCountText(0);
+				SlashOverlay->SetCoinsCountText(0);
+			}
+		}
+	}
+}
+
+void ASlashCharacter::SetEchoHUDHealth()
+{
+	if (SlashOverlay && CharacterAttributes)
+	{
+		SlashOverlay->SetEchoHealthProgressBarPercent(CharacterAttributes->GetCurrentHealthPercent());
+	}
+}
+
+/* Helper Functions*/
+bool ASlashCharacter::IsEchoUnoccupied()
+{
+	return EchoActionState == EActionState::EAS_Unoccupied;
+}
+

@@ -19,7 +19,7 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	/** </IHitInterface*/
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -77,6 +77,12 @@ protected:
 	/*Montages Variables*/
 
 private:
+
+	void InitializeSlashOverlay(APlayerController* PlayerController);
+	void InitializeEnhancedInput(APlayerController* PlayerController);
+	bool IsEchoUnoccupied();
+	void SetEchoHUDHealth();
+
 	/*States*/
 	ECharacterState EchoCurrentState = ECharacterState::ECS_UnEquipped;
 	EActionState EchoActionState = EActionState::EAS_Unoccupied;
@@ -100,8 +106,11 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	class AItem* OverlappingItem;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	UPROPERTY(EditAnywhere, Category = "Echo Weapon Properties")
 	USoundBase* EquipSound;
+
+	UPROPERTY()
+	class USlashOverlay* SlashOverlay;
 	/*Pointers*/
 
 public: 
