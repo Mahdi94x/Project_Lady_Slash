@@ -82,7 +82,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	double CombatRadius = 1000.f;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
-	double AttackRadius = 150.f;
+	double AttackRadius = 200.f;
 	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Navigation / Behavior")
 	AActor* CurrentPatrolTarget;
 	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Navigation / Behavior")
