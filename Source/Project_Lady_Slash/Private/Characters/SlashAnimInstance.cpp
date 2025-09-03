@@ -22,6 +22,8 @@ void USlashAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	{
 		EchoGroundSpeed = UKismetMathLibrary::VSizeXY(EchoMovementComponent->Velocity);
 		IsEchoFalling = EchoMovementComponent->IsFalling();
-		EchoCurrentStateAnim = EchoCharacter->GetEchoCharacterState();
+		EchoCurrentCharacterStateAnim = EchoCharacter->GetEchoCharacterState();
+		EchoCurrentActionStateAnim = EchoCharacter->GetEchoActionState();
+		EchoDeathPose = EchoCharacter->GetDeathPose();
 	}
 }

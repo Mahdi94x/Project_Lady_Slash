@@ -54,6 +54,8 @@ protected:
 	void HitReactingEnd();
 	/*Anim Notifies*/
 
+	virtual void Die() override;
+
 	/*InputActions*/
 	UPROPERTY(EditAnywhere, Category = "Echo Input")
 	class UInputMappingContext* EchoMappingContext;
@@ -117,5 +119,6 @@ public:
 	/*Setters and Getters*/
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetEchoCharacterState() const { return this->EchoCurrentState; }
+	FORCEINLINE EActionState GetEchoActionState() const { return this->EchoActionState; }
 	/*Setters and Getters*/
 };

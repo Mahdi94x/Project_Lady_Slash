@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypesEnums.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()
@@ -33,6 +34,7 @@ protected:
 	virtual int32 PlayAttackMontage();
 	void DisableCapsule();
 	void StopAttackMontage();
+	void DisableMeshCollision();
 
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponBoxCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
@@ -51,6 +53,8 @@ protected:
 	AActor* CombatTarget;
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
 	double WarpTargetDistance = 75.f;
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EDeathPose> DeathPose;
 
 private:
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
@@ -75,4 +79,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Montages")
 	TArray<FName> DeathMontageSections;
 	/*Montages Variables*/
+
+public:
+	FORCEINLINE TEnumAsByte<EDeathPose> GetDeathPose() const { return this->DeathPose; }
 };

@@ -263,13 +263,6 @@ void ASlashCharacter::Jump()
 }
 
 /*GitHit Implementation - TakeDamage - HitReacting*/
-void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
-{
-	Super::GetHit_Implementation(ImpactPoint, Hitter);
-	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision); /*in case AttackMontage got interupted before DisablingBoxCollision*/
-	EchoActionState = EActionState::EAS_HitReaction;
-}
-
 float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamageBaseCharacter(DamageAmount);
@@ -277,9 +270,29 @@ float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	return DamageAmount;
 }
 
+void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
+{
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
+
+	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision); /*in case AttackMontage got interupted before DisablingBoxCollision*/
+
+	if (IsBaseCharacterAlive())
+	{
+		EchoActionState = EActionState::EAS_HitReaction;
+	}
+}
+
 void ASlashCharacter::HitReactingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
+}
+
+/*Die Function*/
+void ASlashCharacter::Die()
+{
+	Super::Die();
+	EchoActionState = EActionState::EAS_Dead;
+	DisableMeshCollision();
 }
 
 /*Slash HUD & Overlay*/

@@ -29,6 +29,12 @@ public:
 	bool IsEchoFalling;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Animation Variables")
-	ECharacterState EchoCurrentStateAnim;
+	ECharacterState EchoCurrentCharacterStateAnim;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Animation Variables")
+	EActionState EchoCurrentActionStateAnim;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Animation Variables")
+	TEnumAsByte<EDeathPose> EchoDeathPose;
 	
 };
