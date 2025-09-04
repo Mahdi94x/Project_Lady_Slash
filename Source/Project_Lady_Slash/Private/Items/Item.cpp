@@ -18,7 +18,7 @@ AItem::AItem()
 	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapSphere"));
 	OverlapSphere->SetupAttachment(GetRootComponent());
 	OverlapSphere->SetSphereRadius(300.f);
-	OverlapSphere->bHiddenInGame = false;
+	OverlapSphere->bHiddenInGame = true;
 
 	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemNiagaraComponent"));
 	ItemEffect->SetupAttachment(GetRootComponent());

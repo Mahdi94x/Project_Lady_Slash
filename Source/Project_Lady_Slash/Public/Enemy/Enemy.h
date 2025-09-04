@@ -66,41 +66,68 @@ private:
 	void SpawnDefaultWeapon();
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn); // CallBack For OnPawnSeen in UPawnSensingComponent
+	void EnemyDeadDrop();
 
 	FTimerHandle PatrolTimer;
 	FTimerHandle EnemyAttackTimer;
 	UPROPERTY(VisibleAnywhere)
 	class UHealthBarComponent* EnemyHealthBar;
-	UPROPERTY(VisibleAnywhere, Category = "EnemyAI Navigation / Behavior")
+	UPROPERTY(VisibleAnywhere, Category = "EnemyAI Behavior")
 	class UPawnSensingComponent* EnemySensing;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> WeaponClass;
 	
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	double CombatRadius = 1000.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	double AttackRadius = 200.f;
-	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Behavior")
 	AActor* CurrentPatrolTarget;
-	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Behavior")
 	TArray<AActor*> PatrolTargets;
+
 	UPROPERTY()
 	class AAIController* EnemyAIController;
+
 	UPROPERTY(EditAnywhere)
 	double PatrolRaduis = 200.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float WaitTimeMin = 3.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float WaitTimeMax = 8.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float EnemyAttackMin = 0.5f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float EnemyAttackMax = 1.f;
-	UPROPERTY(EditAnywhere, Category = "Enemy AI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float PatrollingSpeed = 125.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float ChasingSpeed = 300.f;
-	UPROPERTY(EditAnywhere, Category = "EnemyAI Navigation / Behavior")
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	float DeathLifeSpan = 8.f;
 
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	TArray<TSubclassOf<class AItem>> EnemyDropItemsArray;
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	int32 EnemySoulMinDrop;
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	int32 EnemySoulMaxDrop;
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	int32 EnemyHealthMinDrop;
+
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	int32 EnemyHealthMaxDrop;
 };

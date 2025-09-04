@@ -8,6 +8,9 @@
 #include "HUD/HealthBarComponent.h"
 #include "Items/Weapon/Weapon.h"
 #include "Project_Lady_Slash/DebugMacros.h"
+#include "Items/SoulsPickup/SoulsPickup.h"
+#include "Items/HealthPickup/HealthPickup.h"
+#include "Items/Treasure/Treasure.h"
 
 AEnemy::AEnemy()
 {
@@ -99,6 +102,7 @@ void AEnemy::Die()
 	DisableCapsule();
 	this->SetLifeSpan(DeathLifeSpan);
 	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision);
+	EnemyDeadDrop();
 	//GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
@@ -333,5 +337,40 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		CombatTarget = SeenPawn;
 		ClearPatrolTimer();
 		EnemyChaseTarget();
+	}
+}
+
+void AEnemy::EnemyDeadDrop()
+{
+	UWorld* World = GetWorld();
+	const FVector SpawnLocation = this->GetActorLocation() + FVector(50.f, 50.f, 75.f);
+
+	if (World && EnemyDropItemsArray.Num() > 0)
+	{
+		const int32 Selection = FMath::RandRange(0, 2);
+
+		switch (Selection)
+		{
+			case 0: /*Souls Case*/
+			{
+				class ASoulsPickup* SpawnedSoul = World->SpawnActor<ASoulsPickup>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+				if (SpawnedSoul) SpawnedSoul->SetSoulValue(EnemySoulMinDrop, EnemySoulMaxDrop);
+				break;
+			}
+
+			case 1: /*Health Case*/
+			{
+				class AHealthPickup* SpawnedHealth = World->SpawnActor<AHealthPickup>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+				if (SpawnedHealth) SpawnedHealth->SetHealthValue(EnemyHealthMinDrop, EnemyHealthMaxDrop);
+				break;
+			}
+
+			case 2: /*Treasure Case*/
+			{
+				class ATreasure* SpawnedItem = World->SpawnActor<ATreasure>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+				break;
+			}
+
+		}
 	}
 }
