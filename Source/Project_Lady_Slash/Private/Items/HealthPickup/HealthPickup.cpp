@@ -8,6 +8,8 @@ void AHealthPickup::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponen
 	if (PickUpInterface)
 	{
 		PickUpInterface->HealthPickup(this);
+		SpawnPickupEffect();
+		PlayPickupSound();
 		Destroy();
 	}
 }

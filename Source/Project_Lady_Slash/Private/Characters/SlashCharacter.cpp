@@ -116,7 +116,7 @@ void ASlashCharacter::EchoLook(const FInputActionValue& Value)
 	AddControllerYawInput(LookAxisVector.X);
 }
 
-/*Overlapping - Equipping - Disarming*/
+/*Overlapping - Pickups*/
 void ASlashCharacter::SetOverlappingItem(AItem* Item)
 {
 	OverlappingItem = Item;
@@ -136,7 +136,9 @@ void ASlashCharacter::TreasurePickup(ATreasure* Treasure)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::TreasurePickup"));
 }
+/*Overlapping - Pickups*/
 
+/*Equipping - Disarming*/
 void ASlashCharacter::EKeyPressed()
 {
 	/*Overlapping with a weapon*/
@@ -242,7 +244,7 @@ void ASlashCharacter::EquippingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
-/*Overlapping - Equipping - Disarming*/
+/*Equipping - Disarming*/
 
 /*Attacking*/
 bool ASlashCharacter::CanBaseCharacterAttack()

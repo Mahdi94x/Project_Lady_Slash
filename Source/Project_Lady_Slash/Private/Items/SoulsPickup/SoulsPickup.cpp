@@ -8,6 +8,8 @@ void ASoulsPickup::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	if (PickUpInterface)
 	{
 		PickUpInterface->SoulsPickup(this);
+		SpawnPickupEffect();
+		PlayPickupSound();
 		Destroy();
 	}
 }

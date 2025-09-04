@@ -22,6 +22,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void SpawnPickupEffect();
+	void PlayPickupSound();
+	UFUNCTION(BlueprintPure)
+	float TransformedSine();
+	UFUNCTION(BlueprintPure)
+	float TransformedCosine();
 
 	EItemState ItemCurrentState = EItemState::EIS_Hovering;
 
@@ -37,14 +43,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
 	float TimeConstant = 10.f;
 
-	UFUNCTION(BlueprintPure)
-	float TransformedSine();
-
-	UFUNCTION(BlueprintPure)
-	float TransformedCosine();
-
 	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
 	float RotationRate = 100.f;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Fx")
+	class UNiagaraSystem* PickupEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Fx")
+	USoundBase* PickupSound;
 
 	UFUNCTION()
 	virtual void OnSphereBeginOverlap (UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -54,10 +60,10 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	class UNiagaraComponent* ItemEffect;
+
 private:
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	double RunningTime = 0;
-
 
 };
