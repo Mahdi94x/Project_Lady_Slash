@@ -117,7 +117,7 @@ void ABaseCharacter::HandleDamageBaseCharacter(float DamageAmount)
 {
 	if (CharacterAttributes)
 	{
-		CharacterAttributes->UpdateCurrentHealth(DamageAmount);
+		CharacterAttributes->DecreaseCurrentHealth(DamageAmount);
 	}
 }
 

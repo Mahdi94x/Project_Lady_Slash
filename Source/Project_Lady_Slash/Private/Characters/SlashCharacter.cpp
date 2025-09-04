@@ -12,6 +12,9 @@
 #include "HUD/SlashHUD.h"
 #include "HUD/SlashOverlay.h"
 #include "Components/AttributeComponent.h"
+#include "Items/SoulsPickup/SoulsPickup.h"
+#include "Items/HealthPickup/HealthPickup.h"
+#include "Items/Treasure/Treasure.h"
 
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
@@ -124,17 +127,29 @@ void ASlashCharacter::SetOverlappingItem(AItem* Item)
 
 void ASlashCharacter::SoulsPickup(ASoulsPickup* Soul)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::SoulsPickup"));
+	if (CharacterAttributes && SlashOverlay)
+	{
+		CharacterAttributes->UpdateSoulsAttribute(Soul->GetSoulFinalValue());
+		SlashOverlay->SetSoulsCountText(CharacterAttributes->GetSoulsAttribute());
+	}
 }
 
 void ASlashCharacter::HealthPickup(AHealthPickup* Health)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::HealthPickup"));
+	if (CharacterAttributes && SlashOverlay)
+	{
+		CharacterAttributes->IncreaseCurrentHealth(Health->GetHealthFinalValue());
+		SlashOverlay->SetEchoHealthProgressBarPercent(CharacterAttributes->GetCurrentHealthPercent());
+	}
 }
 
 void ASlashCharacter::TreasurePickup(ATreasure* Treasure)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::TreasurePickup"));
+	if (CharacterAttributes && SlashOverlay)
+	{
+		CharacterAttributes->UpdateCoinsAttribute(Treasure->GetTreasureValue());
+		SlashOverlay->SetCoinsCountText(CharacterAttributes->GetCoinsAttribute());
+	}
 }
 /*Overlapping - Pickups*/
 

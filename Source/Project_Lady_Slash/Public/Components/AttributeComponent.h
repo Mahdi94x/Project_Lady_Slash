@@ -14,6 +14,7 @@ public:
 
 	UAttributeComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	bool IsCharacterAlive();
 
 protected:
 
@@ -26,11 +27,23 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	int32 CoinsAttribute;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	int32 SoulsAttribute;
+
 	/*Character Attributes Variables*/
 
 public: /*Setters - Getters - Updaters*/
 
-	FORCEINLINE void UpdateCurrentHealth(float Damage);
-	FORCEINLINE float GetCurrentHealthPercent();
-	bool IsCharacterAlive();
+	void DecreaseCurrentHealth(float Damage);
+	void IncreaseCurrentHealth(float HealthPickupValue);
+	float GetCurrentHealthPercent();
+	FORCEINLINE int32 GetCoinsAttribute() const { return this->CoinsAttribute; }
+	FORCEINLINE int32 GetSoulsAttribute() const { return this->SoulsAttribute; }
+	void UpdateCoinsAttribute(int32 TreasureValue);
+	void UpdateSoulsAttribute(int32 SoulsValue);
+
 };

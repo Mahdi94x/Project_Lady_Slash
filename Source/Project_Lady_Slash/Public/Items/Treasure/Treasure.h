@@ -18,4 +18,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Treasure Properties")
 	int32 TreasureValue;
+
+public: 
+	FORCEINLINE int32 GetTreasureValue() const { return this->TreasureValue; }
 };

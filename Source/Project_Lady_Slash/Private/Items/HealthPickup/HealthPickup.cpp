@@ -7,9 +7,16 @@ void AHealthPickup::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponen
 	IPickUpInterface* PickUpInterface = Cast<IPickUpInterface>(OtherActor);
 	if (PickUpInterface)
 	{
+		HealthFinalValue = SetHealthValue(HealthMinlValue, HealthMaxlValue);
 		PickUpInterface->HealthPickup(this);
 		SpawnPickupEffect();
 		PlayPickupSound();
 		Destroy();
 	}
+}
+
+int32 AHealthPickup::SetHealthValue(int32 MinValue, int32 MaxValue)
+{
+	const int32 Value = FMath::RandRange(MinValue, MaxValue);
+	return Value;
 }

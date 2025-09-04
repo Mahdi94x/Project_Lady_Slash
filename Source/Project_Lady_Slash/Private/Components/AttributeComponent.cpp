@@ -12,9 +12,25 @@ void UAttributeComponent::BeginPlay()
 	
 }
 
-void UAttributeComponent::UpdateCurrentHealth(float Damage)
+void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+}
+
+bool UAttributeComponent::IsCharacterAlive()
+{
+	return CurrentHealth > 0.f;
+}
+
+void UAttributeComponent::DecreaseCurrentHealth(float Damage)
 {
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.f, MaxHealth);
+}
+
+void UAttributeComponent::IncreaseCurrentHealth(float HealthPickupValue)
+{
+	CurrentHealth = FMath::Clamp(CurrentHealth + HealthPickupValue, 0.f, MaxHealth);
 }
 
 float UAttributeComponent::GetCurrentHealthPercent()
@@ -23,14 +39,13 @@ float UAttributeComponent::GetCurrentHealthPercent()
 	return CurrentHealth / MaxHealth;
 }
 
-bool UAttributeComponent::IsCharacterAlive()
+void UAttributeComponent::UpdateCoinsAttribute(int32 TreasureValue)
 {
-	return CurrentHealth > 0.f;
+	this->CoinsAttribute += TreasureValue;
 }
 
-void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAttributeComponent::UpdateSoulsAttribute(int32 SoulsValue)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	this->SoulsAttribute += SoulsValue;
 }
 
