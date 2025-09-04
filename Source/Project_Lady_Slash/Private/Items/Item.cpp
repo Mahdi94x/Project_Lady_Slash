@@ -19,8 +19,8 @@ AItem::AItem()
 	OverlapSphere->SetSphereRadius(300.f);
 	OverlapSphere->bHiddenInGame = false;
 
-	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemNiagaraComponent"));
-	EmbersEffect->SetupAttachment(GetRootComponent());
+	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemNiagaraComponent"));
+	ItemEffect->SetupAttachment(GetRootComponent());
 }
 
 void AItem::BeginPlay()
