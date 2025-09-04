@@ -20,5 +20,5 @@ private:
 	USoundBase* PickupSounds;
 
 	UPROPERTY(EditAnywhere, Category = "Treasure Properties")
-	int32 GoldValue;
+	int32 TreasureValue;
 };

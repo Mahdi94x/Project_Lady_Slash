@@ -4,10 +4,11 @@
 #include "BaseCharacter/BaseCharacter.h"
 #include "InputActionValue.h"
 #include "CharacterTypesEnums.h"
+#include "Interfaces/PickUpInterface.h"
 #include "SlashCharacter.generated.h"
 
 UCLASS()
-class PROJECT_LADY_SLASH_API ASlashCharacter : public ABaseCharacter
+class PROJECT_LADY_SLASH_API ASlashCharacter : public ABaseCharacter , public IPickUpInterface
 {
 	GENERATED_BODY()
 
@@ -18,6 +19,12 @@ public:
 	/** <IHitInterface*/
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	/** </IHitInterface*/
+	/** <IPickUpInterface*/
+	virtual void SetOverlappingItem(class AItem* Item);
+	virtual void SoulsPickup(class ASoulsPickup* Soul) override;
+	virtual void HealthPickup(class AHealthPickup* Health) override;
+	virtual void TreasurePickup(class ATreasure* Treasure) override;
+	/** <IPickUpInterface*/
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
@@ -117,7 +124,6 @@ private:
 
 public: 
 	/*Setters and Getters*/
-	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetEchoCharacterState() const { return this->EchoCurrentState; }
 	FORCEINLINE EActionState GetEchoActionState() const { return this->EchoActionState; }
 	/*Setters and Getters*/

@@ -117,6 +117,26 @@ void ASlashCharacter::EchoLook(const FInputActionValue& Value)
 }
 
 /*Overlapping - Equipping - Disarming*/
+void ASlashCharacter::SetOverlappingItem(AItem* Item)
+{
+	OverlappingItem = Item;
+}
+
+void ASlashCharacter::SoulsPickup(ASoulsPickup* Soul)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::SoulsPickup"));
+}
+
+void ASlashCharacter::HealthPickup(AHealthPickup* Health)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::HealthPickup"));
+}
+
+void ASlashCharacter::TreasurePickup(ATreasure* Treasure)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::TreasurePickup"));
+}
+
 void ASlashCharacter::EKeyPressed()
 {
 	/*Overlapping with a weapon*/

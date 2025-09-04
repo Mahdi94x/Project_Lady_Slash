@@ -1,7 +1,7 @@
 #include "Items/Item.h"
 #include "Project_Lady_Slash/DebugMacros.h"
 #include "Components/SphereComponent.h"
-#include "Characters/SlashCharacter.h"
+#include "Interfaces/PickUpInterface.h"
 #include "NiagaraComponent.h"
 
 
@@ -44,19 +44,19 @@ float AItem::TransformedCosine()
 
 void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
-	if (SlashCharacter)
+	IPickUpInterface* PickUpInterface = Cast<IPickUpInterface>(OtherActor);
+	if (PickUpInterface)
 	{
-		SlashCharacter->SetOverlappingItem(this);
+		PickUpInterface->SetOverlappingItem(this);
 	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
-	if (SlashCharacter)
+	IPickUpInterface* PickUpInterface = Cast<IPickUpInterface>(OtherActor);
+	if (PickUpInterface)
 	{
-		SlashCharacter->SetOverlappingItem(nullptr);
+		PickUpInterface->SetOverlappingItem(nullptr);
 	}
 }
 
