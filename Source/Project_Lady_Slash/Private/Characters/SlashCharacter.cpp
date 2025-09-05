@@ -284,11 +284,29 @@ void ASlashCharacter::AttackEnd()
 }
 /*Attacking*/
 
-/*Dodge*/
+/*Dodging*/
 void ASlashCharacter::Dodge()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Echo::Dodge"));
+	if (!IsEchoUnoccupied()) return;
+	PlayDodgeMontage();
+	EchoActionState = EActionState::EAS_Dodge;
 }
+
+void ASlashCharacter::PlayDodgeMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DodgeMontage)
+	{
+		AnimInstance->Montage_Play(DodgeMontage);
+		AnimInstance->Montage_JumpToSection(FName("Default"), DodgeMontage);
+	}
+}
+
+void ASlashCharacter::DodgingEnd()
+{
+	EchoActionState = EActionState::EAS_Unoccupied;
+}
+/*Dodging*/
 
 /*Jumping*/
 void ASlashCharacter::Jump()
@@ -323,6 +341,7 @@ void ASlashCharacter::HitReactingEnd()
 {
 	EchoActionState = EActionState::EAS_Unoccupied;
 }
+/*GitHit Implementation - TakeDamage - HitReacting*/
 
 /*Die Function*/
 void ASlashCharacter::Die()

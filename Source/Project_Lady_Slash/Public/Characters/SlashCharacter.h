@@ -47,6 +47,7 @@ protected:
 	bool CanEchoUnEquipWeapon();
 	bool CanEchoEquipWeapon();
 	void PlayEquipMontage(const FName& SectionName);
+	void PlayDodgeMontage();
 	/*Play Montage Sections*/
 
 	/*Anim Notifies*/
@@ -57,6 +58,8 @@ protected:
 	void AddToHandSocket();
 	UFUNCTION(BlueprintCallable)
 	void EquippingEnd();
+	UFUNCTION(BlueprintCallable)
+	void DodgingEnd();
 	UFUNCTION(BlueprintCallable)
 	void HitReactingEnd();
 	/*Anim Notifies*/
@@ -83,6 +86,9 @@ protected:
 	/*Montages Variables*/
 	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Echo Montages")
+	UAnimMontage* DodgeMontage;
 	/*Montages Variables*/
 
 private:
