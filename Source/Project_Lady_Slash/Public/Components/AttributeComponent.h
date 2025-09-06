@@ -22,17 +22,38 @@ protected:
 
 private:
 	/*Character Attributes Variables*/
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	int32 CharacterLevel = 1;
+
 	UPROPERTY(EditAnywhere, Category = "Character Attributes")
 	float CurrentHealth;
 
-	UPROPERTY(EditAnywhere, Category = "Character Attributes")
-	float MaxHealth;
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float MaxHealth = 50;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float HealthRegenRate = 2.f;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
 	int32 CoinsAttribute;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
 	int32 SoulsAttribute;
+
+	UPROPERTY(EditAnywhere, Category = "Character Attributes")
+	float CurrentStamina;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float MaxStamina = 60;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float DodgeCost = 10.f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float StaminaRegenRate = 2.f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character Attributes")
+	float SoulsToNextUpgrade = 5.f;
 
 	/*Character Attributes Variables*/
 
@@ -45,5 +66,12 @@ public: /*Setters - Getters - Updaters*/
 	FORCEINLINE int32 GetSoulsAttribute() const { return this->SoulsAttribute; }
 	void UpdateCoinsAttribute(int32 TreasureValue);
 	void UpdateSoulsAttribute(int32 SoulsValue);
+	float GetCurrentStaminaPercent();
+	void DecreaseCurrentStamina(float Cost);
+	float GetCurrentStamina() const { return this->CurrentStamina; }
+	void StaminaRegeneration(float DeltaTime);
+	void HealthRegeneration(float DeltaTime);
+	float GetDodgeCost() const { return this->DodgeCost; }
+	void UpdateCharacterAttributes();
 
 };

@@ -19,7 +19,7 @@
 /*Constructor*/
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
@@ -48,6 +48,18 @@ ASlashCharacter::ASlashCharacter()
 	EchoEyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("EchoEyebrows"));
 	EchoEyebrows->SetupAttachment(GetMesh());
 	EchoEyebrows->AttachmentName = FString("head");
+}
+
+void ASlashCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (CharacterAttributes && SlashOverlay)
+	{
+		CharacterAttributes->StaminaRegeneration(DeltaTime);
+		SlashOverlay->SetEchoStaminaProgressBarPercent(CharacterAttributes->GetCurrentStaminaPercent());
+		CharacterAttributes->HealthRegeneration(DeltaTime);
+		SlashOverlay->SetEchoHealthProgressBarPercent(CharacterAttributes->GetCurrentHealthPercent());
+	}
 }
 
 /*BeginPlay*/
@@ -287,9 +299,16 @@ void ASlashCharacter::AttackEnd()
 /*Dodging*/
 void ASlashCharacter::Dodge()
 {
-	if (!IsEchoUnoccupied()) return;
+	if (!IsEchoUnoccupied() || !EchoHasEnoughStamina()) return;
+
 	PlayDodgeMontage();
 	EchoActionState = EActionState::EAS_Dodge;
+
+	if (CharacterAttributes && SlashOverlay)
+	{
+		CharacterAttributes->DecreaseCurrentStamina(CharacterAttributes->GetDodgeCost());
+		SlashOverlay->SetEchoStaminaProgressBarPercent(CharacterAttributes->GetCurrentStaminaPercent());
+	}
 }
 
 void ASlashCharacter::PlayDodgeMontage()
@@ -384,5 +403,10 @@ void ASlashCharacter::SetEchoHUDHealth()
 bool ASlashCharacter::IsEchoUnoccupied()
 {
 	return EchoActionState == EActionState::EAS_Unoccupied;
+}
+
+bool ASlashCharacter::EchoHasEnoughStamina()
+{
+	return CharacterAttributes && CharacterAttributes->GetCurrentStamina() > CharacterAttributes->GetDodgeCost();
 }
 

@@ -14,6 +14,7 @@ class PROJECT_LADY_SLASH_API ASlashCharacter : public ABaseCharacter , public IP
 
 public:
 	ASlashCharacter();
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
 	/** <IHitInterface*/
@@ -40,6 +41,7 @@ protected:
 	void EchoEquippingTheWeapon(AWeapon* Weapon);
 	virtual void Attack() override;
 	void Dodge();
+	bool EchoHasEnoughStamina();
 	/*Callbacks for Input*/
 
 	/*Play Montage Sections*/
