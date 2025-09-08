@@ -82,6 +82,10 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 	ClearAttackTimer();
 	SetWeaponBoxCollisionEnabled(ECollisionEnabled::NoCollision);
 	StopAttackMontage();
+	if (IsCharacterInsideAttackRadius())
+	{
+		if(IsBaseCharacterAlive()) StartEnemyAttackTimer();
+	}
 }
 
 void AEnemy::BeginPlay()
@@ -288,7 +292,7 @@ void AEnemy::MoveToTarget(AActor* Target)
 
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);
-	MoveRequest.SetAcceptanceRadius(50.f);
+	MoveRequest.SetAcceptanceRadius(AcceptanceRadius);
 	EnemyAIController->MoveTo(MoveRequest);
 }
 

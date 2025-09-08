@@ -83,6 +83,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
 	double AttackRadius = 200.f;
 
+	UPROPERTY(EditAnywhere, Category = "EnemyAI Behavior")
+	double AcceptanceRadius = 50.f;
+
 	UPROPERTY(EditInstanceOnly, Category = "EnemyAI Behavior")
 	AActor* CurrentPatrolTarget;
 

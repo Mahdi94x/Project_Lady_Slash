@@ -73,6 +73,7 @@ void AWeapon::BoxTrace(FHitResult& BoxHit)
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
 	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this->GetOwner());
 	for (AActor* Actor : IgnoreActorsPerSwing)
 	{
 		ActorsToIgnore.AddUnique(Actor); /*One Hit Per Swing*/
