@@ -19,6 +19,7 @@ class PROJECT_LADY_SLASH_API AItem : public AActor
 public:	
 	AItem();
 	virtual void Tick(float DeltaTime) override;
+	
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,19 +38,19 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* OverlapSphere;
 
-	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Item Parameters", BlueprintReadWrite)
 	float Amplitude = 2.5f;
 	
-	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Item Parameters", BlueprintReadWrite)
 	float TimeConstant = 10.f;
 
-	UPROPERTY(EditAnywhere, Category = "Item Sine Parameters", BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "Item Parameters", BlueprintReadWrite)
 	float RotationRate = 100.f;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Fx")
+	UPROPERTY(EditAnywhere, Category = "Item Parameters")
 	class UNiagaraSystem* PickupEffect;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Fx")
+	UPROPERTY(EditAnywhere, Category = "Item Parameters")
 	USoundBase* PickupSound;
 
 	UFUNCTION()
@@ -61,9 +62,21 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class UNiagaraComponent* ItemEffect;
 
+
 private:
 
-	UPROPERTY(VisibleInstanceOnly, Category = "Item Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	void ItemDriftToGround();
+
+	UPROPERTY(VisibleInstanceOnly, Category = "Item Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	double RunningTime = 0;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Parameters")
+	double DesiredZ;
+
+	UPROPERTY(EditAnywhere, Category = "Item Parameters")
+	double DriftRate = -20.f;
+
+	UPROPERTY(EditAnywhere, Category = "Item Parameters")
+	double AboveTheGroundValue = 125.f;
 
 };

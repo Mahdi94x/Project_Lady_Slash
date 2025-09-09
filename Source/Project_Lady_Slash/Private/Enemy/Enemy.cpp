@@ -11,6 +11,7 @@
 #include "Items/SoulsPickup/SoulsPickup.h"
 #include "Items/HealthPickup/HealthPickup.h"
 #include "Items/Treasure/Treasure.h"
+#include "Items/Item.h"
 
 AEnemy::AEnemy()
 {
@@ -347,7 +348,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 void AEnemy::EnemyDeadDrop()
 {
 	UWorld* World = GetWorld();
-	const FVector SpawnLocation = this->GetActorLocation() + FVector(50.f, 50.f, 75.f);
+	const FVector SpawnLocation = this->GetActorLocation() + FVector(0.f, 0.f, 150.f);
 
 	if (World && EnemyDropItemsArray.Num() > 0)
 	{
@@ -355,23 +356,35 @@ void AEnemy::EnemyDeadDrop()
 
 		switch (Selection)
 		{
-			case 0: /*Souls Case*/
+		case 0: /*Souls Case*/
+		{
+			class ASoulsPickup* SpawnedSoul = World->SpawnActor<ASoulsPickup>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+			if (SpawnedSoul)
 			{
-				class ASoulsPickup* SpawnedSoul = World->SpawnActor<ASoulsPickup>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
-				if (SpawnedSoul) SpawnedSoul->SetSoulValue(EnemySoulMinDrop, EnemySoulMaxDrop);
+				SpawnedSoul->SetSoulValue(EnemySoulMinDrop, EnemySoulMaxDrop);
+				SpawnedSoul->SetOwner(this);
+			}
 				break;
 			}
 
 			case 1: /*Health Case*/
 			{
 				class AHealthPickup* SpawnedHealth = World->SpawnActor<AHealthPickup>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
-				if (SpawnedHealth) SpawnedHealth->SetHealthValue(EnemyHealthMinDrop, EnemyHealthMaxDrop);
+				if (SpawnedHealth)
+				{
+					SpawnedHealth->SetHealthValue(EnemyHealthMinDrop, EnemyHealthMaxDrop);
+					SpawnedHealth->SetOwner(this);
+				}
 				break;
 			}
 
 			case 2: /*Treasure Case*/
 			{
-				class ATreasure* SpawnedItem = World->SpawnActor<ATreasure>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+				class ATreasure* SpawnedTreasure = World->SpawnActor<ATreasure>(EnemyDropItemsArray[Selection], SpawnLocation, GetActorRotation());
+				if (SpawnedTreasure)
+				{
+					SpawnedTreasure->SetOwner(this);
+				}
 				break;
 			}
 

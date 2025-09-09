@@ -5,6 +5,7 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AItem::AItem()
 {
@@ -30,6 +31,8 @@ void AItem::BeginPlay()
 	
 	OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereBeginOverlap);
 	OverlapSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
+
+	ItemDriftToGround();
 
 }
 
@@ -85,6 +88,34 @@ void AItem::PlayPickupSound()
 	}
 }
 
+void AItem::ItemDriftToGround()
+{
+	const FVector Start = GetActorLocation();
+	const FVector End = Start - FVector(0.f, 0.f, 2000.f);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.AddUnique(EObjectTypeQuery::ObjectTypeQuery1);
+
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.AddUnique(GetOwner());
+
+	FHitResult HitResult;
+
+	UKismetSystemLibrary::LineTraceSingleForObjects(
+		this,
+		Start,
+		End,
+		ObjectTypes,
+		false,
+		ActorsToIgnore,
+		EDrawDebugTrace::None,
+		HitResult,
+		true
+		);
+	 DesiredZ = HitResult.ImpactPoint.Z + AboveTheGroundValue;
+
+}
+
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -95,6 +126,12 @@ void AItem::Tick(float DeltaTime)
 	{
 		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSine()));
 		AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
+		const double LocationZ = GetActorLocation().Z;
+		if (LocationZ > DesiredZ)
+		{
+			const FVector DeltaLocation = FVector(0.f, 0.f, DriftRate * DeltaTime);
+			AddActorWorldOffset(DeltaLocation);
+		}
 	}
 }
 
