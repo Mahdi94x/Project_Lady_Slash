@@ -22,7 +22,9 @@ protected:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	/** </IHitInterface*/
 	virtual void Attack();
-	virtual void Die();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void Die();
 	virtual bool CanBaseCharacterAttack();
 	void PlayHitReactMontage(const FName& SectionName);
 	void DirectionalHitReact(const FVector& ImpactPoint);

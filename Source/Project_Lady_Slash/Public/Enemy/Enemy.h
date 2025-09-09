@@ -28,7 +28,7 @@ protected:
 	/** <AActor> */
 
 	/** <ABaseCharacter> */
-	virtual void Die() override;
+	virtual void Die_Implementation() override;
 	virtual void HandleDamageBaseCharacter(float DamageAmount) override;
 	virtual void Attack() override;
 	virtual bool CanBaseCharacterAttack() override;

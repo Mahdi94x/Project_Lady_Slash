@@ -363,9 +363,9 @@ void ASlashCharacter::HitReactingEnd()
 /*GitHit Implementation - TakeDamage - HitReacting*/
 
 /*Die Function*/
-void ASlashCharacter::Die()
+void ASlashCharacter::Die_Implementation()
 {
-	Super::Die();
+	Super::Die_Implementation();
 	EchoActionState = EActionState::EAS_Dead;
 	DisableMeshCollision();
 }

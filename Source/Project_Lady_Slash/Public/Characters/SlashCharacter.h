@@ -66,7 +66,7 @@ protected:
 	void HitReactingEnd();
 	/*Anim Notifies*/
 
-	virtual void Die() override;
+	virtual void Die_Implementation() override;
 
 	/*InputActions*/
 	UPROPERTY(EditAnywhere, Category = "Echo Input")

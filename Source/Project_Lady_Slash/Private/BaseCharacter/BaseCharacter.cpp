@@ -156,7 +156,7 @@ void ABaseCharacter::PlayMontageSection(UAnimMontage* Montage, const FName& Sect
 	}
 }
 
-void ABaseCharacter::Die()
+void ABaseCharacter::Die_Implementation()
 {
 	Tags.Add(FName("Dead"));
 	PlayDeathMontage();
