@@ -9,7 +9,9 @@ public class Project_Lady_SlashTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
+        BuildEnvironment = TargetBuildEnvironment.Shared;
+        
 		ExtraModuleNames.Add("Project_Lady_Slash");
 	}
 }
