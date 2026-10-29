@@ -8,13 +8,11 @@ public class Project_Lady_SlashEditorTarget : TargetRules
 	public Project_Lady_SlashEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V6;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
-
-		BuildEnvironment = TargetBuildEnvironment.Shared;
-
-		bOverrideBuildEnvironment = true;
-
+		
+		DefaultBuildSettings = BuildSettingsVersion.V7;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;
+		
 		ExtraModuleNames.AddRange( new string[] { "Project_Lady_Slash" } );
+		
 	}
 }
